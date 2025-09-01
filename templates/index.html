@@ -11,6 +11,7 @@
     <!-- Include Header -->
     {% include 'header.html' %}
 
+
     <!-- Main Content -->
     <main class="main">
         <!-- Hero Section -->
@@ -167,7 +168,7 @@
                     <p style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 2rem;">
                         Birinchi buyurtmangizga 15% chegirma! Kodni kiriting: <strong>NAVOI15</strong>
                     </p>
-                    <a href="products.html" class="btn btn-primary">Hozir Xarid Qiling</a>
+                    <a href="{% url 'curtains:products' %}" class="btn btn-primary">Hozir Xarid Qiling</a>
                 </div>
             </div>
         </section>

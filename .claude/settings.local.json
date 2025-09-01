@@ -8,7 +8,8 @@
       "Bash(django-admin startproject:*)",
       "Bash(cp:*)",
       "Bash(mv:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []
