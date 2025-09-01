@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savat - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="hero" style="padding: 2rem 0; margin-bottom: 2rem;">
+                <h1>Xaridlar Savati</h1>
+                <p>Tanlagan mahsulotlaringizni ko'rib chiqing</p>
+            </section>
+
+            <!-- Cart Content -->
+            <div id="cartContent">
+                <!-- Cart Items Container -->
+                <div class="cart-items-container" style="background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); margin-bottom: 2rem;">
+                    <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-light);">
+                        <h3>Savatdagi Mahsulotlar (<span id="cartItemCount">3</span> ta)</h3>
+                    </div>
+                    
+                    <!-- Cart Items List -->
+                    <div id="cartItemsList">
+                        <!-- Cart Item 1 -->
+                        <div class="cart-item" data-id="1">
+                            <div class="cart-item-image">🏺</div>
+                            <div class="cart-item-info">
+                                <h4>Oltin Klassik Parda</h4>
+                                <p>O'lcham: 200x250 sm • Rang: Oltin • Material: Ipak</p>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateQuantity(1, -1)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" onchange="updateQuantityInput(1, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(1, 1)">+</button>
+                            </div>
+                            <div class="cart-item-price">350,000 so'm</div>
+                            <button class="remove-btn" onclick="removeFromCart(1)">🗑️</button>
+                        </div>
+
+                        <!-- Cart Item 2 -->
+                        <div class="cart-item" data-id="2">
+                            <div class="cart-item-image">🎭</div>
+                            <div class="cart-item-info">
+                                <h4>Zamonaviy Oq Parda</h4>
+                                <p>O'lcham: 150x200 sm • Rang: Oq • Material: Paxta</p>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateQuantity(2, -1)">-</button>
+                                <input type="number" class="quantity-input" value="2" min="1" onchange="updateQuantityInput(2, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(2, 1)">+</button>
+                            </div>
+                            <div class="cart-item-price">560,000 so'm</div>
+                            <button class="remove-btn" onclick="removeFromCart(2)">🗑️</button>
+                        </div>
+
+                        <!-- Cart Item 3 -->
+                        <div class="cart-item" data-id="8">
+                            <div class="cart-item-image">📏</div>
+                            <div class="cart-item-info">
+                                <h4>Premium Karniz</h4>
+                                <p>Uzunlik: 3 metr • Material: Metall • Rang: Oltin</p>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateQuantity(8, -1)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" onchange="updateQuantityInput(8, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(8, 1)">+</button>
+                            </div>
+                            <div class="cart-item-price">150,000 so'm</div>
+                            <button class="remove-btn" onclick="removeFromCart(8)">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo Code Section -->
+                <div style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Chegirma Kodi</h3>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" class="form-input" placeholder="Chegirma kodini kiriting" id="promoCode" style="flex: 1;">
+                        <button class="btn btn-secondary" onclick="applyPromoCode()">Qo'llash</button>
+                    </div>
+                    <div id="promoMessage" style="margin-top: 1rem; display: none;"></div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h3 style="margin-bottom: 1.5rem;">Buyurtma Xulasasi</h3>
+                    
+                    <div class="summary-row">
+                        <span>Mahsulotlar narxi:</span>
+                        <span id="subtotal">1,060,000 so'm</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Yetkazib berish:</span>
+                        <span id="shipping">50,000 so'm</span>
+                    </div>
+                    
+                    <div class="summary-row" id="discountRow" style="display: none;">
+                        <span>Chegirma:</span>
+                        <span id="discount" style="color: #28a745;">0 so'm</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span>Jami:</span>
+                        <span id="total">1,110,000 so'm</span>
+                    </div>
+
+                    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                        <a href="{% url 'curtains:products' %}" class="btn btn-secondary" style="flex: 1;">Xaridni Davom Ettirish</a>
+                        <a href="{% url 'curtains:checkout' %}" class="btn btn-primary" style="flex: 1;">Rasmiylashtirish</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Cart Message -->
+            <div id="emptyCart" style="display: none;">
+                <div style="text-align: center; padding: 4rem 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+                    <h2>Savat bo'sh</h2>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">Hali hech qanday mahsulot qo'shilmagan</p>
+                    <a href="{% url 'curtains:products' %}" class="btn btn-primary">Mahsulotlarni Ko'rish</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize cart when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize cart
+            updateCartDisplay();
+        });
+    </script>
+</body>
+</html>

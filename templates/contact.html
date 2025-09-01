@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aloqa - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="hero" style="padding: 2rem 0; margin-bottom: 3rem;">
+                <h1>Biz Bilan Aloqa</h1>
+                <p>Savollaringiz bormi? Biz yordam berishga tayyormiz!</p>
+            </section>
+
+            <!-- Contact Container -->
+            <div class="contact-container">
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <h3 style="margin-bottom: 2rem; color: var(--text-dark);">📞 Aloqa Ma'lumotlari</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Manzil</h4>
+                            <p>Navoi shahar, Mustaqillik ko'chasi 123<br>Do'kon raqami: 45</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h4>Telefon</h4>
+                            <p>+998 79 123 45 67<br>+998 91 987 65 43</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>info@navoicurtain.uz<br>support@navoicurtain.uz</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">🕒</div>
+                        <div class="contact-details">
+                            <h4>Ish Vaqti</h4>
+                            <p>Dushanba - Shanba: 9:00 - 18:00<br>Yakshanba: 10:00 - 16:00</p>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div style="margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem;">Ijtimoiy Tarmoqlar</h4>
+                        <div class="social-links">
+                            <a href="#" class="social-link" title="Facebook">📘</a>
+                            <a href="#" class="social-link" title="Instagram">📷</a>
+                            <a href="#" class="social-link" title="Telegram">📱</a>
+                            <a href="#" class="social-link" title="WhatsApp">💬</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="contact-form">
+                    <h3 style="margin-bottom: 2rem; color: var(--text-dark);">💬 Xabar Yuborish</h3>
+                    
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label class="form-label">Ism va Familiya *</label>
+                            <input type="text" class="form-input" name="fullName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Telefon raqam *</label>
+                            <input type="tel" class="form-input" name="phone" placeholder="+998 90 123 45 67" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email manzil</label>
+                            <input type="email" class="form-input" name="email" placeholder="example@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mavzu *</label>
+                            <select class="form-select" name="subject" required>
+                                <option value="">Mavzuni tanlang</option>
+                                <option value="product-inquiry">Mahsulot haqida savol</option>
+                                <option value="order-support">Buyurtma yordami</option>
+                                <option value="technical-support">Texnik yordam</option>
+                                <option value="complaint">Shikoyat</option>
+                                <option value="suggestion">Taklif</option>
+                                <option value="other">Boshqa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Xabar matni *</label>
+                            <textarea class="form-textarea" name="message" placeholder="Xabaringizni bu yerda yozing..." required></textarea>
+                        </div>
+
+                        <!-- Privacy Agreement -->
+                        <div class="form-group">
+                            <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" name="privacy" required style="margin-top: 0.25rem;">
+                                <span style="font-size: 0.9rem; color: var(--text-light);">
+                                    Men shaxsiy ma'lumotlarni qayta ishlashga roziman va 
+                                    <a href="#" style="color: var(--primary-gold);">maxfiylik siyosati</a>ni qabul qilaman
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-full">Xabarni Yuborish</button>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="contactSuccess" class="alert alert-success" style="display: none;">
+                        ✅ Xabaringiz muvaffaqiyatli yuborildi! Tez orada sizga javob beramiz.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <section class="section">
+                <h2 class="section-title">❓ Tez-tez So'raladigan Savollar</h2>
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div style="background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); overflow: hidden;">
+                        
+                        <div class="faq-item" style="border-bottom: 1px solid var(--border-light);">
+                            <button class="faq-question" style="width: 100%; padding: 1.5rem; background: none; border: none; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Yetkazib berish qancha vaqt oladi?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer" style="padding: 0 1.5rem 1.5rem; color: var(--text-light); display: none;">
+                                Standart yetkazib berish 2-3 ish kuni ichida amalga oshiriladi. Tezkor yetkazib berish xizmati 1 ish kuni ichida. Navoi shahri ichida bepul yetkazib berish 500,000 so'mdan yuqori buyurtmalar uchun.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" style="border-bottom: 1px solid var(--border-light);">
+                            <button class="faq-question" style="width: 100%; padding: 1.5rem; background: none; border: none; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Mahsulotni qaytarish mumkinmi?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer" style="padding: 0 1.5rem 1.5rem; color: var(--text-light); display: none;">
+                                Ha, xarid qilgandan so'ng 14 kun ichida mahsulotni qaytarish mumkin. Mahsulot ishlatilmagan va asl holatida bo'lishi kerak. Qaytarish uchun chegitani saqlab qolish zarur.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" style="border-bottom: 1px solid var(--border-light);">
+                            <button class="faq-question" style="width: 100%; padding: 1.5rem; background: none; border: none; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Maxsus o'lchamda parda buyurtma qilish mumkinmi?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer" style="padding: 0 1.5rem 1.5rem; color: var(--text-light); display: none;">
+                                Albatta! Biz maxsus o'lchamda parda tayyorlash xizmatini ham taklif qilamiz. Bu uchun bizga aloqa qiling va o'lchamlaringizni bildiring. Maxsus buyurtmalar 5-7 ish kuni ichida tayyor bo'ladi.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" style="width: 100%; padding: 1.5rem; background: none; border: none; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                <span>O'rnatish xizmati bormi?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer" style="padding: 0 1.5rem 1.5rem; color: var(--text-light); display: none;">
+                                Ha, professional o'rnatish xizmatimiz mavjud. Tajribali mutaxassislarimiz pardalarni va karnizlarni sifatli o'rnatib beradi. O'rnatish xizmati alohida haq to'lanadi va oldindan kelishiladi.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize contact page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize contact page
+            initializeContactPage();
+        });
+    </script>
+</body>
+</html>

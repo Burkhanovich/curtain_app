@@ -1,0 +1,70 @@
+<!-- Header Component -->
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <!-- Logo -->
+            <div class="logo">
+                <a href="{% url 'curtains:index' %}">
+                    <h1>Navoi <span class="golden">Curtain</span></h1>
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="nav-desktop">
+                <ul class="nav-list">
+                    <li><a href="{% url 'curtains:index' %}" class="nav-link">Bosh sahifa</a></li>
+                    <li class="nav-dropdown">
+                        <a href="{% url 'curtains:products' %}" class="nav-link">Mahsulotlar ▼</a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'curtains:products' %}?category=classic" class="dropdown-link">Klassik Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=modern" class="dropdown-link">Zamonaviy Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=luxury" class="dropdown-link">Hashamatli Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=accessories" class="dropdown-link">Aksessuarlar</a>
+                        </div>
+                    </li>
+                    <li><a href="#about" class="nav-link scroll-link">Biz Haqimizda</a></li>
+                    <li><a href="#services" class="nav-link scroll-link">Xizmatlar</a></li>
+                    <li><a href="{% url 'curtains:contact' %}" class="nav-link">Aloqa</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <!-- Search -->
+                <div class="search-box">
+                    <input type="text" placeholder="Qidirish..." class="search-input">
+                    <button class="search-btn">🔍</button>
+                </div>
+
+                <!-- Cart -->
+                <a href="{% url 'curtains:cart' %}" class="cart-link">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <!-- User Account -->
+                <div class="user-menu">
+                    <button class="user-btn">👤</button>
+                    <div class="user-dropdown">
+                        <a href="{% url 'curtains:login' %}">Kirish</a>
+                        <a href="{% url 'curtains:register' %}">Ro'yxatdan o'tish</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="nav-mobile">
+        <ul class="nav-mobile-list">
+            <li><a href="{% url 'curtains:index' %}" class="nav-mobile-link">Bosh sahifa</a></li>
+            <li><a href="{% url 'curtains:products' %}" class="nav-mobile-link">Mahsulotlar</a></li>
+            <li><a href="{% url 'curtains:contact' %}" class="nav-mobile-link">Aloqa</a></li>
+            <li><a href="{% url 'curtains:cart' %}" class="nav-mobile-link">Savat</a></li>
+            <li><a href="{% url 'curtains:login' %}" class="nav-mobile-link">Kirish</a></li>
+        </ul>
+    </nav>
+</header>

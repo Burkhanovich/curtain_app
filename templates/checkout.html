@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtma Berish - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="hero" style="padding: 2rem 0; margin-bottom: 2rem;">
+                <h1>Buyurtma Rasmiylashtirish</h1>
+                <p>Ma'lumotlaringizni to'ldiring va buyurtmani tasdiqlang</p>
+            </section>
+
+            <!-- Checkout Container -->
+            <div class="checkout-container">
+                <!-- Checkout Form -->
+                <div class="checkout-form">
+                    <form id="checkoutForm">
+                        <!-- Customer Information -->
+                        <div class="checkout-section">
+                            <h3>👤 Shaxsiy Ma'lumotlar</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Ism *</label>
+                                    <input type="text" class="form-input" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Familiya *</label>
+                                    <input type="text" class="form-input" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Telefon raqam *</label>
+                                <input type="tel" class="form-input" name="phone" placeholder="+998 90 123 45 67" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email manzil</label>
+                                <input type="email" class="form-input" name="email" placeholder="example@email.com">
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address -->
+                        <div class="checkout-section">
+                            <h3>📍 Yetkazib Berish Manzili</h3>
+                            <div class="form-group">
+                                <label class="form-label">Shahar *</label>
+                                <select class="form-select" name="city" required>
+                                    <option value="">Shaharni tanlang</option>
+                                    <option value="navoi">Navoi</option>
+                                    <option value="tashkent">Toshkent</option>
+                                    <option value="samarkand">Samarqand</option>
+                                    <option value="bukhara">Buxoro</option>
+                                    <option value="nukus">Nukus</option>
+                                    <option value="other">Boshqa shahar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ko'cha manzili *</label>
+                                <input type="text" class="form-input" name="address" placeholder="Ko'cha nomi va uy raqami" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Kvartira/Ofis</label>
+                                    <input type="text" class="form-input" name="apartment" placeholder="Kvartira raqami">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Pochta indeksi</label>
+                                    <input type="text" class="form-input" name="zipCode" placeholder="210100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Options -->
+                        <div class="checkout-section">
+                            <h3>🚚 Yetkazib Berish Usuli</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; border: 2px solid var(--border-light); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" class="delivery-option">
+                                    <input type="radio" name="delivery" value="standard" checked style="margin: 0;">
+                                    <div>
+                                        <div style="font-weight: 600;">Standart yetkazib berish</div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">2-3 ish kuni • 50,000 so'm</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; border: 2px solid var(--border-light); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" class="delivery-option">
+                                    <input type="radio" name="delivery" value="express" style="margin: 0;">
+                                    <div>
+                                        <div style="font-weight: 600;">Tezkor yetkazib berish</div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">1 ish kuni • 100,000 so'm</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; border: 2px solid var(--border-light); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" class="delivery-option">
+                                    <input type="radio" name="delivery" value="pickup" style="margin: 0;">
+                                    <div>
+                                        <div style="font-weight: 600;">O'zim olib ketaman</div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">Bepul • Do'kondan olib ketish</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="checkout-section">
+                            <h3>💳 To'lov Usuli</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; border: 2px solid var(--border-light); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" class="payment-option">
+                                    <input type="radio" name="payment" value="cash" checked style="margin: 0;">
+                                    <div>
+                                        <div style="font-weight: 600;">💰 Naqd pul</div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">Yetkazib berishda to'lov</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; border: 2px solid var(--border-light); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" class="payment-option">
+                                    <input type="radio" name="payment" value="card" style="margin: 0;">
+                                    <div>
+                                        <div style="font-weight: 600;">💳 Plastik karta</div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">Onlayn to'lov</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; border: 2px solid var(--border-light); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" class="payment-option">
+                                    <input type="radio" name="payment" value="transfer" style="margin: 0;">
+                                    <div>
+                                        <div style="font-weight: 600;">🏦 Bank o'tkazmasi</div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">Hisob raqamiga o'tkazma</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <div class="checkout-section">
+                            <h3>📝 Qo'shimcha Izohlar</h3>
+                            <div class="form-group">
+                                <label class="form-label">Buyurtma haqida izoh (ixtiyoriy)</label>
+                                <textarea class="form-textarea" name="notes" placeholder="Maxsus so'rovlar, yetkazib berish vaqti yoki boshqa izohlar..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <h3 style="margin-bottom: 1.5rem;">Buyurtma Tafsiloti</h3>
+                    
+                    <!-- Order Items -->
+                    <div id="orderItems">
+                        <div class="order-item">
+                            <div class="order-item-info">
+                                <h5>Oltin Klassik Parda</h5>
+                                <p>Miqdor: 1 x 350,000 so'm</p>
+                            </div>
+                            <div class="order-item-price">350,000 so'm</div>
+                        </div>
+                        <div class="order-item">
+                            <div class="order-item-info">
+                                <h5>Zamonaviy Oq Parda</h5>
+                                <p>Miqdor: 2 x 280,000 so'm</p>
+                            </div>
+                            <div class="order-item-price">560,000 so'm</div>
+                        </div>
+                        <div class="order-item">
+                            <div class="order-item-info">
+                                <h5>Premium Karniz</h5>
+                                <p>Miqdor: 1 x 150,000 so'm</p>
+                            </div>
+                            <div class="order-item-price">150,000 so'm</div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div style="border-top: 1px solid var(--border-light); padding-top: 1rem; margin-top: 1rem;">
+                        <div class="summary-row">
+                            <span>Mahsulotlar:</span>
+                            <span id="orderSubtotal">1,060,000 so'm</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Yetkazib berish:</span>
+                            <span id="orderShipping">50,000 so'm</span>
+                        </div>
+                        <div class="summary-row" id="orderDiscountRow" style="display: none;">
+                            <span>Chegirma:</span>
+                            <span id="orderDiscount" style="color: #28a745;">0 so'm</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Jami:</span>
+                            <span id="orderTotal">1,110,000 so'm</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" form="checkoutForm" class="btn btn-primary w-full" style="margin-top: 2rem;">
+                        Buyurtmani Tasdiqlash
+                    </button>
+
+                    <!-- Security Notice -->
+                    <div style="text-align: center; margin-top: 1rem; color: var(--text-light); font-size: 0.85rem;">
+                        🔒 Barcha ma'lumotlar xavfsiz himoyalangan
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize checkout when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize checkout
+            initializeCheckout();
+        });
+    </script>
+</body>
+</html>

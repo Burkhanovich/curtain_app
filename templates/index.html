@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navoi Curtain - Sifatli Pardalar</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Include Header -->
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Uyingizni <span class="golden">Go'zal</span> Qiling</h1>
+                <p>Sifatli pardalar va uy tekstili mahsulotlari bilan uyingizni zamonaviy va qulay qiling. Eng yaxshi narxlarda premium sifat.</p>
+                <a href="{% url 'curtains:products' %}" class="btn btn-primary">Mahsulotlarni Ko'rish</a>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Kategoriyalar</h2>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=classic'">
+                        <div class="category-icon">🏛️</div>
+                        <h3 class="category-title">Klassik Pardalar</h3>
+                        <p class="category-description">An'anaviy va klassik dizaynli pardalar</p>
+                    </div>
+                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=modern'">
+                        <div class="category-icon">🏢</div>
+                        <h3 class="category-title">Zamonaviy Pardalar</h3>
+                        <p class="category-description">Minimalist va zamonaviy uslubdagi pardalar</p>
+                    </div>
+                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=luxury'">
+                        <div class="category-icon">👑</div>
+                        <h3 class="category-title">Hashamatli Pardalar</h3>
+                        <p class="category-description">Premium va hashamatli pardalar</p>
+                    </div>
+                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=accessories'">
+                        <div class="category-icon">✨</div>
+                        <h3 class="category-title">Aksessuarlar</h3>
+                        <p class="category-description">Parda karniz va boshqa aksessuarlar</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Yangi Mahsulotlar</h2>
+                <div class="products-grid">
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 1 %}'">
+                        <div class="product-image">🏺</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Oltin Klassik Parda</h3>
+                            <p class="product-description">Yuqori sifatli ipakdan tayyorlangan klassik uslubdagi parda</p>
+                            <div class="product-price">350,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 2 %}'">
+                        <div class="product-image">🎭</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Zamonaviy Oq Parda</h3>
+                            <p class="product-description">Minimalist dizayn va yumshoq to'qimadan tayyorlangan</p>
+                            <div class="product-price">280,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 3 %}'">
+                        <div class="product-image">🌟</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Hashamatli Bej Parda</h3>
+                            <p class="product-description">Premium to'qima va nozik tikuv bilan tayyorlangan</p>
+                            <div class="product-price">520,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 4 %}'">
+                        <div class="product-image">🎨</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Rangli Dizayn Parda</h3>
+                            <p class="product-description">Yorqin ranglar va zamonaviy naqshlar bilan</p>
+                            <div class="product-price">420,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <a href="{% url 'curtains:products' %}" class="btn btn-secondary">Barcha Mahsulotlar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">Biz Haqimizda</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                    <div>
+                        <h3 style="color: var(--primary-gold); margin-bottom: 1rem;">10+ yillik tajriba</h3>
+                        <p style="color: var(--text-light); line-height: 1.8; margin-bottom: 1.5rem;">
+                            Navoi Curtain kompaniyasi 2014-yildan buyon sifatli pardalar va uy tekstili ishlab chiqarish bilan shug'ullanadi. 
+                            Bizning maqsadimiz - har bir uyni go'zal va qulay qilish.
+                        </p>
+                        <p style="color: var(--text-light); line-height: 1.8;">
+                            Biz faqat yuqori sifatli materiallardan foydalanib, zamonaviy texnologiyalar va an'anaviy hunarmandchilik 
+                            usullarini birlashtirgan holda mahsulot ishlab chiqaramiz.
+                        </p>
+                    </div>
+                    <div style="text-align: center; font-size: 8rem; color: var(--primary-gold);">
+                        🏛️
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section" style="background: var(--light-beige);">
+            <div class="container">
+                <h2 class="section-title">Bizning Xizmatlarimiz</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-icon">📐</div>
+                        <h3 class="category-title">Maxsus O'lcham</h3>
+                        <p class="category-description">Sizning derazangiz o'lchamiga mos parda tayyorlash</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🔧</div>
+                        <h3 class="category-title">Professional O'rnatish</h3>
+                        <p class="category-description">Tajribali mutaxassislar tomonidan o'rnatish</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🚚</div>
+                        <h3 class="category-title">Tez Yetkazib Berish</h3>
+                        <p class="category-description">Navoi shahri bo'ylab 1-2 kunda yetkazib berish</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🛡️</div>
+                        <h3 class="category-title">Sifat Kafolati</h3>
+                        <p class="category-description">Barcha mahsulotlarga 2 yil kafolat</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Discount Section -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center">
+                    <h2>🎉 Maxsus Chegirma!</h2>
+                    <p style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 2rem;">
+                        Birinchi buyurtmangizga 15% chegirma! Kodni kiriting: <strong>NAVOI15</strong>
+                    </p>
+                    <a href="products.html" class="btn btn-primary">Hozir Xarid Qiling</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Include Footer -->
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

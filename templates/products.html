@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahsulotlar - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="hero" style="padding: 2rem 0; margin-bottom: 2rem;">
+                <h1>Barcha Mahsulotlar</h1>
+                <p>Uyingiz uchun eng yaxshi pardalarni tanlang</p>
+            </section>
+
+            <!-- Filters Section -->
+            <section class="filters-section" style="margin-bottom: 2rem;">
+                <div style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px var(--shadow);">
+                    <h3 style="margin-bottom: 1rem;">Filtrlash</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <!-- Category Filter -->
+                        <div class="form-group">
+                            <label class="form-label">Kategoriya</label>
+                            <select class="form-select" id="categoryFilter">
+                                <option value="">Barcha kategoriyalar</option>
+                                <option value="classic">Klassik pardalar</option>
+                                <option value="modern">Zamonaviy pardalar</option>
+                                <option value="luxury">Hashamatli pardalar</option>
+                                <option value="accessories">Aksessuarlar</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Filter -->
+                        <div class="form-group">
+                            <label class="form-label">Narx oralig'i</label>
+                            <select class="form-select" id="priceFilter">
+                                <option value="">Barcha narxlar</option>
+                                <option value="0-300000">300,000 so'mgacha</option>
+                                <option value="300000-500000">300,000 - 500,000 so'm</option>
+                                <option value="500000-800000">500,000 - 800,000 so'm</option>
+                                <option value="800000+">800,000 so'mdan yuqori</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort Filter -->
+                        <div class="form-group">
+                            <label class="form-label">Saralash</label>
+                            <select class="form-select" id="sortFilter">
+                                <option value="newest">Yangi mahsulotlar</option>
+                                <option value="price-low">Narx: Pastdan yuqoriga</option>
+                                <option value="price-high">Narx: Yuqoridan pastga</option>
+                                <option value="popular">Ommabop</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Grid -->
+            <section class="products-section">
+                <div class="products-grid" id="productsGrid">
+                    <!-- Product 1 -->
+                    <div class="product-card" data-category="classic" data-price="350000" onclick="window.location.href='{% url 'curtains:product_detail' 1 %}'">
+                        <div class="product-image">🏺</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Oltin Klassik Parda</h3>
+                            <p class="product-description">Yuqori sifatli ipakdan tayyorlangan klassik uslubdagi parda. Mehmon xonangiz uchun ideal.</p>
+                            <div class="product-price">350,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(1)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="product-card" data-category="modern" data-price="280000" onclick="window.location.href='{% url 'curtains:product_detail' 2 %}'">
+                        <div class="product-image">🎭</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Zamonaviy Oq Parda</h3>
+                            <p class="product-description">Minimalist dizayn va yumshoq to'qimadan tayyorlangan zamonaviy parda.</p>
+                            <div class="product-price">280,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(2)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="product-card" data-category="luxury" data-price="520000" onclick="window.location.href='{% url 'curtains:product_detail' 3 %}'">
+                        <div class="product-image">🌟</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Hashamatli Bej Parda</h3>
+                            <p class="product-description">Premium to'qima va nozik tikuv bilan tayyorlangan hashamatli parda.</p>
+                            <div class="product-price">520,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(3)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="product-card" data-category="modern" data-price="420000" onclick="window.location.href='{% url 'curtains:product_detail' 4 %}'">
+                        <div class="product-image">🎨</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Rangli Dizayn Parda</h3>
+                            <p class="product-description">Yorqin ranglar va zamonaviy naqshlar bilan bezatilgan parda.</p>
+                            <div class="product-price">420,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(4)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="product-card" data-category="classic" data-price="390000" onclick="window.location.href='{% url 'curtains:product_detail' 5 %}'">
+                        <div class="product-image">🏛️</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Klassik Qizil Parda</h3>
+                            <p class="product-description">An'anaviy qizil rangdagi klassik parda. Rasmiy xonalar uchun.</p>
+                            <div class="product-price">390,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(5)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 6 -->
+                    <div class="product-card" data-category="luxury" data-price="680000" onclick="window.location.href='{% url 'curtains:product_detail' 6 %}'">
+                        <div class="product-image">👑</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Royal Oltin Parda</h3>
+                            <p class="product-description">Eng premium materiallar va qo'l tikuvi bilan tayyorlangan.</p>
+                            <div class="product-price">680,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(6)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 7 -->
+                    <div class="product-card" data-category="modern" data-price="320000" onclick="window.location.href='{% url 'curtains:product_detail' 7 %}'">
+                        <div class="product-image">🌙</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Tungi Ko'k Parda</h3>
+                            <p class="product-description">Yotoq xonasi uchun maxsus ishlab chiqilgan qorong'u ko'k parda.</p>
+                            <div class="product-price">320,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(7)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 8 -->
+                    <div class="product-card" data-category="accessories" data-price="150000" onclick="window.location.href='{% url 'curtains:product_detail' 8 %}'">
+                        <div class="product-image">📏</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Premium Karniz</h3>
+                            <p class="product-description">Metall karniz to'plami, barcha zarur aksessuarlar bilan.</p>
+                            <div class="product-price">150,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(8)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 9 -->
+                    <div class="product-card" data-category="modern" data-price="380000" onclick="window.location.href='{% url 'curtains:product_detail' 9 %}'">
+                        <div class="product-image">🍃</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Eco Yashil Parda</h3>
+                            <p class="product-description">Ekologik toza materiallardan tayyorlangan yashil parda.</p>
+                            <div class="product-price">380,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(9)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No Results Message -->
+                <div id="noResults" style="display: none; text-align: center; padding: 3rem;">
+                    <h3>Mahsulot topilmadi</h3>
+                    <p>Iltimos, boshqa filtr parametrlarini sinab ko'ring.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize filters when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize filters
+            initializeFilters();
+        });
+    </script>
+</body>
+</html>

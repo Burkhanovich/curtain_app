@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahsulot Tafsiloti - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav style="margin-bottom: 2rem;">
+                <a href="{% url 'curtains:index' %}" style="color: var(--text-light); text-decoration: none;">Bosh sahifa</a>
+                <span style="color: var(--text-light); margin: 0 0.5rem;">/</span>
+                <a href="{% url 'curtains:products' %}" style="color: var(--text-light); text-decoration: none;">Mahsulotlar</a>
+                <span style="color: var(--text-light); margin: 0 0.5rem;">/</span>
+                <span style="color: var(--primary-gold);">Mahsulot tafsiloti</span>
+            </nav>
+
+            <!-- Product Detail Container -->
+            <div class="product-detail-container">
+                <!-- Product Gallery -->
+                <div class="product-gallery">
+                    <div class="main-image" id="mainImage">🏺</div>
+                    <div class="thumbnail-images">
+                        <div class="thumbnail active" data-image="🏺">🏺</div>
+                        <div class="thumbnail" data-image="🖼️">🖼️</div>
+                        <div class="thumbnail" data-image="🎨">🎨</div>
+                        <div class="thumbnail" data-image="✨">✨</div>
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="product-details">
+                    <h1 class="product-title" id="productTitle">Oltin Klassik Parda</h1>
+                    <div class="product-price" id="productPrice">350,000 so'm</div>
+                    
+                    <!-- Product Rating -->
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div style="color: var(--primary-gold);">⭐⭐⭐⭐⭐</div>
+                        <span style="color: var(--text-light);">(24 sharh)</span>
+                    </div>
+
+                    <div class="product-description" id="productDescription">
+                        Yuqori sifatli ipakdan tayyorlangan klassik uslubdagi parda. Bu parda mehmon xonangizga nafis va zamonaviy ko'rinish beradi. 
+                        Maxsus texnologiya yordamida ishlab chiqilgan bo'lib, uzoq muddat davomida o'z shaklini va rangini saqlab qoladi.
+                        <br><br>
+                        <strong>Xususiyatlari:</strong>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>100% tabiiy ipak to'qima</li>
+                            <li>Qo'l tikuvi bilan tayyorlangan</li>
+                            <li>UV nurlaridan himoya</li>
+                            <li>Oson parvarish qilish mumkin</li>
+                            <li>2 yil kafolat</li>
+                        </ul>
+                    </div>
+
+                    <!-- Product Options -->
+                    <div class="product-options">
+                        <!-- Size Options -->
+                        <div class="option-group">
+                            <label class="option-label">O'lcham:</label>
+                            <div class="option-buttons" id="sizeOptions">
+                                <button class="option-btn active" data-size="150x200">150x200 sm</button>
+                                <button class="option-btn" data-size="200x250">200x250 sm</button>
+                                <button class="option-btn" data-size="250x300">250x300 sm</button>
+                                <button class="option-btn" data-size="custom">Maxsus o'lcham</button>
+                            </div>
+                        </div>
+
+                        <!-- Color Options -->
+                        <div class="option-group">
+                            <label class="option-label">Rang:</label>
+                            <div class="option-buttons" id="colorOptions">
+                                <button class="option-btn active" data-color="gold">Oltin</button>
+                                <button class="option-btn" data-color="beige">Bej</button>
+                                <button class="option-btn" data-color="cream">Krem</button>
+                                <button class="option-btn" data-color="brown">Jigarrang</button>
+                            </div>
+                        </div>
+
+                        <!-- Material Options -->
+                        <div class="option-group">
+                            <label class="option-label">Material:</label>
+                            <div class="option-buttons" id="materialOptions">
+                                <button class="option-btn active" data-material="silk">Ipak</button>
+                                <button class="option-btn" data-material="cotton">Paxta</button>
+                                <button class="option-btn" data-material="linen">Zig'ir</button>
+                                <button class="option-btn" data-material="velvet">Baxmal</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart Section -->
+                    <div class="add-to-cart-section">
+                        <div class="quantity-selector">
+                            <label class="option-label" style="margin-bottom: 0;">Miqdori:</label>
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                            <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="10">
+                            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                        <button class="btn btn-primary" style="flex: 1;" onclick="addToCartDetail()">
+                            Savatga Qo'shish - <span id="totalPrice">350,000 so'm</span>
+                        </button>
+                    </div>
+
+                    <!-- Additional Actions -->
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-secondary" style="flex: 1;">♡ Sevimlilar</button>
+                        <button class="btn btn-secondary" style="flex: 1;">📞 Maslahat</button>
+                    </div>
+
+                    <!-- Delivery Info -->
+                    <div style="background: var(--light-beige); padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
+                        <h4 style="color: var(--text-dark); margin-bottom: 1rem;">🚚 Yetkazib berish</h4>
+                        <ul style="list-style: none; color: var(--text-light);">
+                            <li style="margin-bottom: 0.5rem;">📦 Bepul yetkazib berish 500,000 so'mdan yuqori buyurtmalar uchun</li>
+                            <li style="margin-bottom: 0.5rem;">⏰ 2-3 ish kuni ichida yetkazib beriladi</li>
+                            <li style="margin-bottom: 0.5rem;">🔄 14 kun ichida qaytarish kafolati</li>
+                            <li>✅ Professional o'rnatish xizmati mavjud</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            <section class="section">
+                <h2 class="section-title">O'xshash Mahsulotlar</h2>
+                <div class="products-grid">
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 2 %}'">
+                        <div class="product-image">🎭</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Zamonaviy Oq Parda</h3>
+                            <p class="product-description">Minimalist dizayn va yumshoq to'qimadan tayyorlangan</p>
+                            <div class="product-price">280,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(2)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 5 %}'">
+                        <div class="product-image">🏛️</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Klassik Qizil Parda</h3>
+                            <p class="product-description">An'anaviy qizil rangdagi klassik parda</p>
+                            <div class="product-price">390,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(5)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 3 %}'">
+                        <div class="product-image">🌟</div>
+                        <div class="product-info">
+                            <h3 class="product-title">Hashamatli Bej Parda</h3>
+                            <p class="product-description">Premium to'qima va nozik tikuv bilan tayyorlangan</p>
+                            <div class="product-price">520,000 so'm</div>
+                            <div class="product-actions">
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(3)">Savatga Qo'shish</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize product detail functionality when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize product detail functionality
+            initializeProductDetail();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Auth Container -->
+            <div class="auth-container">
+                <h2 class="auth-title">Hisobingizga Kirish</h2>
+                
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Telefon raqam yoki Email</label>
+                        <input type="text" class="form-input" name="username" placeholder="+998 90 123 45 67 yoki email@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Parol</label>
+                        <input type="password" class="form-input" name="password" placeholder="Parolingizni kiriting" required>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="remember">
+                            <span style="font-size: 0.9rem;">Meni eslab qol</span>
+                        </label>
+                        <a href="#" style="color: var(--primary-gold); text-decoration: none; font-size: 0.9rem;">Parolni unutdingizmi?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Kirish</button>
+                </form>
+
+                <!-- Divider -->
+                <div style="text-align: center; margin: 2rem 0; position: relative;">
+                    <span style="background: var(--white); padding: 0 1rem; color: var(--text-light);">yoki</span>
+                    <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border-light); z-index: -1;"></div>
+                </div>
+
+                <!-- Social Login -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button class="btn btn-secondary w-full" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span>📘</span>
+                        Facebook orqali kirish
+                    </button>
+                    <button class="btn btn-secondary w-full" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span>🔍</span>
+                        Google orqali kirish
+                    </button>
+                </div>
+
+                <!-- Register Link -->
+                <div class="auth-link">
+                    <p>Hisobingiz yo'qmi? <a href="{% url 'curtains:register' %}">Ro'yxatdan o'ting</a></p>
+                </div>
+
+                <!-- Success/Error Messages -->
+                <div id="loginSuccess" class="alert alert-success" style="display: none;">
+                    ✅ Muvaffaqiyatli kirdingiz! Bosh sahifaga yo'naltirilmoqda...
+                </div>
+                <div id="loginError" class="alert alert-error" style="display: none;">
+                    ❌ Login yoki parol noto'g'ri. Iltimos, qaytadan urinib ko'ring.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize login form when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize login form
+            initializeLoginForm();
+        });
+    </script>
+</body>
+</html>

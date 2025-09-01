@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan O'tish - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Auth Container -->
+            <div class="auth-container" style="max-width: 500px;">
+                <h2 class="auth-title">Ro'yxatdan O'tish</h2>
+                
+                <!-- Register Form -->
+                <form id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Ism *</label>
+                            <input type="text" class="form-input" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Familiya *</label>
+                            <input type="text" class="form-input" name="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Telefon raqam *</label>
+                        <input type="tel" class="form-input" name="phone" placeholder="+998 90 123 45 67" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email manzil *</label>
+                        <input type="email" class="form-input" name="email" placeholder="example@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Parol *</label>
+                        <input type="password" class="form-input" name="password" placeholder="Kamida 8 ta belgi" required minlength="8">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Parolni tasdiqlash *</label>
+                        <input type="password" class="form-input" name="confirmPassword" placeholder="Parolni qaytadan kiriting" required>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="form-group">
+                        <label class="form-label">Tug'ilgan sana</label>
+                        <input type="date" class="form-input" name="birthDate">
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label class="form-label">Jins</label>
+                        <select class="form-select" name="gender">
+                            <option value="">Tanlang</option>
+                            <option value="male">Erkak</option>
+                            <option value="female">Ayol</option>
+                        </select>
+                    </div>
+
+                    <!-- Address Information -->
+                    <div class="form-group">
+                        <label class="form-label">Shahar</label>
+                        <select class="form-select" name="city">
+                            <option value="">Shaharni tanlang</option>
+                            <option value="navoi">Navoi</option>
+                            <option value="tashkent">Toshkent</option>
+                            <option value="samarkand">Samarqand</option>
+                            <option value="bukhara">Buxoro</option>
+                            <option value="nukus">Nukus</option>
+                            <option value="other">Boshqa shahar</option>
+                        </select>
+                    </div>
+
+                    <!-- Agreements -->
+                    <div class="form-group">
+                        <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; margin-bottom: 1rem;">
+                            <input type="checkbox" name="terms" required style="margin-top: 0.25rem;">
+                            <span style="font-size: 0.9rem; color: var(--text-light);">
+                                Men <a href="#" style="color: var(--primary-gold);">foydalanish shartlari</a>ni 
+                                o'qidim va qabul qilaman *
+                            </span>
+                        </label>
+                        
+                        <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="newsletter" style="margin-top: 0.25rem;">
+                            <span style="font-size: 0.9rem; color: var(--text-light);">
+                                Yangi mahsulotlar va maxsus takliflar haqida xabar olishni xohlayman
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Ro'yxatdan O'tish</button>
+                </form>
+
+                <!-- Divider -->
+                <div style="text-align: center; margin: 2rem 0; position: relative;">
+                    <span style="background: var(--white); padding: 0 1rem; color: var(--text-light);">yoki</span>
+                    <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border-light); z-index: -1;"></div>
+                </div>
+
+                <!-- Social Register -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button class="btn btn-secondary w-full" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span>📘</span>
+                        Facebook orqali ro'yxatdan o'tish
+                    </button>
+                    <button class="btn btn-secondary w-full" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span>🔍</span>
+                        Google orqali ro'yxatdan o'tish
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="auth-link">
+                    <p>Hisobingiz bormi? <a href="{% url 'curtains:login' %}">Kirish</a></p>
+                </div>
+
+                <!-- Success/Error Messages -->
+                <div id="registerSuccess" class="alert alert-success" style="display: none;">
+                    ✅ Ro'yxatdan o'tish muvaffaqiyatli! Hisobingizga kirish uchun emailni tasdiqlang.
+                </div>
+                <div id="registerError" class="alert alert-error" style="display: none;">
+                    ❌ Ro'yxatdan o'tishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Initialize register form when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize register form
+            initializeRegisterForm();
+        });
+    </script>
+</body>
+</html>

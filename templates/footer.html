@@ -1,0 +1,62 @@
+<!-- Footer Component -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Company Info -->
+            <div class="footer-section">
+                <h3>Navoi <span class="golden">Curtain</span></h3>
+                <p>Sifatli pardalar va uy tekstili mahsulotlari. Uyingizni go'zal va zamonaviy qiling.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">📧</a>
+                    <a href="#" class="social-link">📞</a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Tezkor havolalar</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'curtains:index' %}">Bosh sahifa</a></li>
+                    <li><a href="{% url 'curtains:products' %}">Mahsulotlar</a></li>
+                    <li><a href="{% url 'curtains:contact' %}">Aloqa</a></li>
+                    <li><a href="#" class="disabled">Biz haqimizda</a></li>
+                </ul>
+            </div>
+
+            <!-- Categories -->
+            <div class="footer-section">
+                <h4>Kategoriyalar</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'curtains:products' %}?category=classic">Klassik pardalar</a></li>
+                    <li><a href="{% url 'curtains:products' %}?category=modern">Zamonaviy pardalar</a></li>
+                    <li><a href="{% url 'curtains:products' %}?category=luxury">Hashamatli pardalar</a></li>
+                    <li><a href="{% url 'curtains:products' %}?category=accessories">Aksessuarlar</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="footer-section">
+                <h4>Aloqa</h4>
+                <div class="contact-info">
+                    <p>📍 Navoi shahar, Mustaqillik ko'chasi 123</p>
+                    <p>📞 +998 79 123 45 67</p>
+                    <p>✉️ info@navoicurtain.uz</p>
+                    <p>🕒 Har kuni: 9:00 - 18:00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; 2024 Navoi Curtain. Barcha huquqlar himoyalangan.</p>
+                <div class="footer-bottom-links">
+                    <a href="#" class="disabled">Maxfiylik siyosati</a>
+                    <a href="#" class="disabled">Foydalanish shartlari</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
