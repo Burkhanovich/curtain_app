@@ -1,0 +1,411 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtma Muvaffaqiyatli - {{ order.order_number }} - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="success-container">
+                <div class="success-icon">
+                    <div class="checkmark">✓</div>
+                </div>
+                
+                <h1>Buyurtmangiz Qabul Qilindi!</h1>
+                <p class="success-message">
+                    Rahmat! Sizning buyurtmangiz muvaffaqiyatli qabul qilindi. 
+                    Tez orada bizning sotuvchilarimiz siz bilan bog'lanishadi.
+                </p>
+
+                <div class="order-details">
+                    <div class="order-info">
+                        <h3>Buyurtma Ma'lumotlari</h3>
+                        <div class="info-row">
+                            <span class="label">Buyurtma raqami:</span>
+                            <span class="value">#{{ order.order_number }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Mijoz:</span>
+                            <span class="value">{{ order.customer_name }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Telefon:</span>
+                            <span class="value">{{ order.customer_phone }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Manzil:</span>
+                            <span class="value">{{ order.customer_address }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Holati:</span>
+                            <span class="value status-pending">{{ order.get_status_display }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Vaqt:</span>
+                            <span class="value">{{ order.created_date|date:"d.m.Y H:i" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <h3>Buyurtma Elementlari</h3>
+                        {% for item in order.items.all %}
+                        <div class="order-item">
+                            {% with main_image=item.curtain.images.first %}
+                            <div class="item-image">
+                                {% if main_image %}
+                                    <img src="{{ main_image.image.url }}" alt="{{ item.curtain.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                {% else %}
+                                    <div style="width: 60px; height: 60px; background: var(--light-beige); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border-radius: 8px;">🏺</div>
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+                            
+                            <div class="item-details">
+                                <h4>{{ item.curtain.title }}</h4>
+                                <p>Miqdori: {{ item.quantity }} ta</p>
+                                {% if item.custom_width or item.custom_height %}
+                                    <p>Maxsus o'lcham: {{ item.custom_width|default:"?" }} x {{ item.custom_height|default:"?" }} sm</p>
+                                {% endif %}
+                                {% if item.custom_notes %}
+                                    <p>Maxsus talablar: {{ item.custom_notes }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="item-price">
+                                {{ item.unit_price|floatformat:0 }} so'm
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <div class="order-total">
+                            <strong>Taxminiy summa: {{ order.get_total_amount|floatformat:0 }} so'm</strong>
+                            <small>* Aniq narx sotuvchi bilan gaplashganda belgilanadi</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-steps">
+                    <h3>Keyingi Qadamlar:</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Tasdiqlash</h4>
+                                <p>Bizning sotuvchilarimiz 1-2 soat ichida siz bilan bog'lanishadi</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Tafsilotlarni muhokama qilish</h4>
+                                <p>O'lcham, rang, narx va yetkazib berish muddatini belgilaymiz</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Tayyorlash va yetkazish</h4>
+                                <p>Pardangiz professional tarzda tayyorlanib, sizga yetkaziladi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-info">
+                    <h3>Savollaringiz bormi?</h3>
+                    <p>Bizning jamoamiz sizga yordam berishga doim tayyor!</p>
+                    <div class="contact-methods">
+                        <a href="tel:+998901234567" class="contact-method">
+                            <span class="icon">📞</span>
+                            <span>+998 90 123 45 67</span>
+                        </a>
+                        <a href="mailto:info@navoicurtain.uz" class="contact-method">
+                            <span class="icon">📧</span>
+                            <span>info@navoicurtain.uz</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'curtains:index' %}" class="btn btn-primary">Bosh Sahifaga</a>
+                    <a href="{% url 'curtains:products' %}" class="btn btn-secondary">Boshqa Mahsulotlar</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'orders:my_orders' %}" class="btn btn-secondary">Mening Buyurtmalarim</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .success-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .success-icon {
+            margin-bottom: 2rem;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #27ae60;
+            color: white;
+            font-size: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            animation: checkmark 0.6s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-container h1 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+            text-align: left;
+        }
+
+        .order-info, .order-items {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .order-info h3, .order-items h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--light-beige);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-beige);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-dark);
+        }
+
+        .item-details p {
+            margin: 0.25rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .item-price {
+            margin-left: auto;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .order-total {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 2px solid var(--primary-gold);
+            margin-top: 1rem;
+        }
+
+        .order-total strong {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .order-total small {
+            color: var(--text-light);
+        }
+
+        .next-steps {
+            margin: 3rem 0;
+            text-align: left;
+            background: var(--light-beige);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .next-steps h3 {
+            text-align: center;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gold);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+        }
+
+        .step-content h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .contact-info {
+            margin: 3rem 0;
+        }
+
+        .contact-info h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--white);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 1rem;
+            }
+            
+            .order-details {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .contact-methods {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

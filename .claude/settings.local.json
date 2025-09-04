@@ -9,7 +9,10 @@
       "Bash(cp:*)",
       "Bash(mv:*)",
       "Bash(rm:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(timeout:*)",
+      "Bash(del test_category_fix.py)",
+      "Bash(del db.sqlite3)"
     ],
     "deny": [],
     "ask": []

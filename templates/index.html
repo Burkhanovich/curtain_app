@@ -1,6 +1,7 @@
-{% load static %}
+
 <!DOCTYPE html>
 <html lang="uz">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,85 +29,158 @@
             <div class="container">
                 <h2 class="section-title">Kategoriyalar</h2>
                 <div class="categories-grid">
-                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=classic'">
+                    {% for category in categories %}
+                    <div class="category-card" onclick="window.location.href='{% url 'curtains:category_detail' category.pk %}'">
+                        <div class="category-icon">🏛️</div>
+                        <h3 class="category-title">{{ category.title }}</h3>
+                        <p class="category-description">{{ category.curtains_count }} ta parda</p>
+                    </div>
+                    {% empty %}
+                    <div class="category-card">
                         <div class="category-icon">🏛️</div>
                         <h3 class="category-title">Klassik Pardalar</h3>
                         <p class="category-description">An'anaviy va klassik dizaynli pardalar</p>
                     </div>
-                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=modern'">
+                    <div class="category-card">
                         <div class="category-icon">🏢</div>
                         <h3 class="category-title">Zamonaviy Pardalar</h3>
                         <p class="category-description">Minimalist va zamonaviy uslubdagi pardalar</p>
                     </div>
-                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=luxury'">
+                    <div class="category-card">
                         <div class="category-icon">👑</div>
                         <h3 class="category-title">Hashamatli Pardalar</h3>
                         <p class="category-description">Premium va hashamatli pardalar</p>
                     </div>
-                    <div class="category-card" onclick="window.location.href='{% url 'curtains:products' %}?category=accessories'">
+                    <div class="category-card">
                         <div class="category-icon">✨</div>
                         <h3 class="category-title">Aksessuarlar</h3>
                         <p class="category-description">Parda karniz va boshqa aksessuarlar</p>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>
 
         <!-- Featured Products Section -->
+        {% if featured_curtains %}
         <section class="section">
             <div class="container">
-                <h2 class="section-title">Yangi Mahsulotlar</h2>
+                <h2 class="section-title">Asosiy Mahsulotlar</h2>
                 <div class="products-grid">
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 1 %}'">
-                        <div class="product-image">🏺</div>
+                    {% for curtain in featured_curtains %}
+                    <div class="product-card" {% if curtain.slug %}onclick="window.location.href='{% url 'curtains:product_detail' curtain.slug %}'"{% endif %}>
+                        {% with main_image=curtain.images.first %}
+                        <div class="product-image">
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ curtain.title }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                            {% else %}
+                                🏺
+                            {% endif %}
+                        </div>
+                        {% endwith %}
                         <div class="product-info">
-                            <h3 class="product-title">Oltin Klassik Parda</h3>
-                            <p class="product-description">Yuqori sifatli ipakdan tayyorlangan klassik uslubdagi parda</p>
-                            <div class="product-price">350,000 so'm</div>
+                            <h3 class="product-title">{{ curtain.title }}</h3>
+                            <p class="product-description">{{ curtain.content|truncatewords:10 }}</p>
+                            <div class="product-price">
+                                {% if curtain.is_on_sale %}
+                                    <span style="text-decoration: line-through; color: #999; font-size: 0.9rem;">{{ curtain.price|floatformat:0 }} so'm</span>
+                                    <span style="color: #e74c3c; font-weight: bold;">{{ curtain.final_price|floatformat:0 }} so'm</span>
+                                {% else %}
+                                    {{ curtain.price|floatformat:0 }} so'm
+                                {% endif %}
+                            </div>
                             <div class="product-actions">
-                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
+                                <a href="{% url 'orders:quick_order' curtain.id %}" class="btn btn-primary w-full">📞 Buyurtma Berish</a>
                             </div>
                         </div>
                     </div>
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 2 %}'">
-                        <div class="product-image">🎭</div>
-                        <div class="product-info">
-                            <h3 class="product-title">Zamonaviy Oq Parda</h3>
-                            <p class="product-description">Minimalist dizayn va yumshoq to'qimadan tayyorlangan</p>
-                            <div class="product-price">280,000 so'm</div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 3 %}'">
-                        <div class="product-image">🌟</div>
-                        <div class="product-info">
-                            <h3 class="product-title">Hashamatli Bej Parda</h3>
-                            <p class="product-description">Premium to'qima va nozik tikuv bilan tayyorlangan</p>
-                            <div class="product-price">520,000 so'm</div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 4 %}'">
-                        <div class="product-image">🎨</div>
-                        <div class="product-info">
-                            <h3 class="product-title">Rangli Dizayn Parda</h3>
-                            <p class="product-description">Yorqin ranglar va zamonaviy naqshlar bilan</p>
-                            <div class="product-price">420,000 so'm</div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary w-full">Savatga Qo'shish</button>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="text-center mt-2">
                     <a href="{% url 'curtains:products' %}" class="btn btn-secondary">Barcha Mahsulotlar</a>
                 </div>
             </div>
         </section>
+        {% endif %}
+        
+        <!-- New Products Section -->
+        {% if new_curtains %}
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Yangi Mahsulotlar</h2>
+                <div class="products-grid">
+                    {% for curtain in new_curtains %}
+                    <div class="product-card" {% if curtain.slug %}onclick="window.location.href='{% url 'curtains:product_detail' curtain.slug %}'"{% endif %}>
+                        {% with main_image=curtain.images.first %}
+                        <div class="product-image">
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ curtain.title }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                            {% else %}
+                                🆕
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                        <div class="product-info">
+                            <h3 class="product-title">{{ curtain.title }}</h3>
+                            <p class="product-description">{{ curtain.content|truncatewords:10 }}</p>
+                            <div class="product-price">
+                                {% if curtain.is_on_sale %}
+                                    <span style="text-decoration: line-through; color: #999; font-size: 0.9rem;">{{ curtain.price|floatformat:0 }} so'm</span>
+                                    <span style="color: #e74c3c; font-weight: bold;">{{ curtain.final_price|floatformat:0 }} so'm</span>
+                                {% else %}
+                                    {{ curtain.price|floatformat:0 }} so'm
+                                {% endif %}
+                            </div>
+                            <div class="product-actions">
+                                <a href="{% url 'orders:quick_order' curtain.id %}" class="btn btn-primary w-full">📞 Buyurtma Berish</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Sale Products Section -->
+        {% if sale_curtains %}
+        <section class="section" style="background: var(--light-beige);">
+            <div class="container">
+                <h2 class="section-title">🔥 Chegirmadagi Mahsulotlar</h2>
+                <div class="products-grid">
+                    {% for curtain in sale_curtains %}
+                    <div class="product-card" {% if curtain.slug %}onclick="window.location.href='{% url 'curtains:product_detail' curtain.slug %}'"{% endif %} style="border: 2px solid #e74c3c;">
+                        {% with main_image=curtain.images.first %}
+                        <div class="product-image" style="position: relative;">
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ curtain.title }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                            {% else %}
+                                🔥
+                            {% endif %}
+                            <div style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
+                                {% load math_extras %}
+                                {% widthratio curtain.discount_price curtain.price 100 as discount_percent %}
+                                -{{ 100|sub:discount_percent }}%
+                            </div>
+                        </div>
+                        {% endwith %}
+                        <div class="product-info">
+                            <h3 class="product-title">{{ curtain.title }}</h3>
+                            <p class="product-description">{{ curtain.content|truncatewords:10 }}</p>
+                            <div class="product-price">
+                                <span style="text-decoration: line-through; color: #999; font-size: 0.9rem;">{{ curtain.price|floatformat:0 }} so'm</span>
+                                <span style="color: #e74c3c; font-weight: bold; font-size: 1.1rem;">{{ curtain.final_price|floatformat:0 }} so'm</span>
+                            </div>
+                            <div class="product-actions">
+                                <a href="{% url 'orders:quick_order' curtain.id %}" class="btn btn-primary w-full">📞 Buyurtma Berish</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
 
         <!-- About Section -->
         <section id="about" class="section">

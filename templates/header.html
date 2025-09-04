@@ -36,19 +36,25 @@
                     <button class="search-btn">🔍</button>
                 </div>
 
-                <!-- Cart -->
-                <a href="{% url 'curtains:cart' %}" class="cart-link">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
-                </a>
 
                 <!-- User Account -->
                 <div class="user-menu">
-                    <button class="user-btn">👤</button>
-                    <div class="user-dropdown">
-                        <a href="{% url 'curtains:login' %}">Kirish</a>
-                        <a href="{% url 'curtains:register' %}">Ro'yxatdan o'tish</a>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <button class="user-btn">👤 {{ user.get_short_name }}</button>
+                        <div class="user-dropdown">
+                            <a href="{% url 'accounts:profile' %}">Profil</a>
+                            <a href="{% url 'accounts:dashboard' %}">Boshqaruv Paneli</a>
+                            <a href="{% url 'accounts:address_list' %}">Manzillar</a>
+                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--light-beige);">
+                            <a href="{% url 'accounts:logout' %}">Chiqish</a>
+                        </div>
+                    {% else %}
+                        <button class="user-btn">👤</button>
+                        <div class="user-dropdown">
+                            <a href="{% url 'accounts:login' %}">Kirish</a>
+                            <a href="{% url 'accounts:register' %}">Ro'yxatdan o'tish</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -63,8 +69,13 @@
             <li><a href="{% url 'curtains:index' %}" class="nav-mobile-link">Bosh sahifa</a></li>
             <li><a href="{% url 'curtains:products' %}" class="nav-mobile-link">Mahsulotlar</a></li>
             <li><a href="{% url 'curtains:contact' %}" class="nav-mobile-link">Aloqa</a></li>
-            <li><a href="{% url 'curtains:cart' %}" class="nav-mobile-link">Savat</a></li>
-            <li><a href="{% url 'curtains:login' %}" class="nav-mobile-link">Kirish</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'accounts:profile' %}" class="nav-mobile-link">Profil</a></li>
+                <li><a href="{% url 'accounts:logout' %}" class="nav-mobile-link">Chiqish</a></li>
+            {% else %}
+                <li><a href="{% url 'accounts:login' %}" class="nav-mobile-link">Kirish</a></li>
+                <li><a href="{% url 'accounts:register' %}" class="nav-mobile-link">Ro'yxatdan o'tish</a></li>
+            {% endif %}
         </ul>
     </nav>
 </header>

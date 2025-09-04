@@ -26,87 +26,136 @@
             <div class="product-detail-container">
                 <!-- Product Gallery -->
                 <div class="product-gallery">
-                    <div class="main-image" id="mainImage">🏺</div>
-                    <div class="thumbnail-images">
-                        <div class="thumbnail active" data-image="🏺">🏺</div>
-                        <div class="thumbnail" data-image="🖼️">🖼️</div>
-                        <div class="thumbnail" data-image="🎨">🎨</div>
-                        <div class="thumbnail" data-image="✨">✨</div>
-                    </div>
+                    {% if curtain.images.all %}
+                        {% with main_image=curtain.images.first %}
+                        <div class="main-image" id="mainImage">
+                            <img src="{{ main_image.image.url }}" alt="{{ curtain.title }}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        {% endwith %}
+                        
+                        {% if curtain.images.count > 1 %}
+                        <div class="thumbnail-images">
+                            {% for image in curtain.images.all %}
+                            <div class="thumbnail {% if forloop.first %}active{% endif %}" data-image="{{ image.image.url }}">
+                                <img src="{{ image.image.url }}" alt="{{ curtain.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="main-image" id="mainImage" style="display: flex; align-items: center; justify-content: center; background: var(--light-beige); height: 400px; border-radius: 8px; font-size: 4rem;">
+                            🏺
+                        </div>
+                    {% endif %}
                 </div>
 
                 <!-- Product Details -->
                 <div class="product-details">
-                    <h1 class="product-title" id="productTitle">Oltin Klassik Parda</h1>
-                    <div class="product-price" id="productPrice">350,000 so'm</div>
+                    <h1 class="product-title" id="productTitle">{{ curtain.title }}</h1>
                     
-                    <!-- Product Rating -->
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                        <div style="color: var(--primary-gold);">⭐⭐⭐⭐⭐</div>
-                        <span style="color: var(--text-light);">(24 sharh)</span>
+                    {% if curtain.category %}
+                    <div style="color: var(--text-light); margin-bottom: 0.5rem;">{{ curtain.category.title }}</div>
+                    {% endif %}
+                    
+                    <div class="product-price" id="productPrice">
+                        {% if curtain.is_on_sale %}
+                            <span style="text-decoration: line-through; color: #999; font-size: 1rem; margin-right: 10px;">{{ curtain.price|floatformat:0 }} so'm</span>
+                            <span style="color: #e74c3c; font-weight: bold; font-size: 1.5rem;">{{ curtain.final_price|floatformat:0 }} so'm</span>
+                            <div style="display: inline-block; background: #e74c3c; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; margin-left: 10px;">
+                                {% load math_extras %}
+                                {% widthratio curtain.discount_price curtain.price 100 as discount_percent %}
+                                -{{ 100|sub:discount_percent }}% chegirma
+                            </div>
+                        {% else %}
+                            {{ curtain.price|floatformat:0 }} so'm
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Product Stats -->
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                        <div>⭐⭐⭐⭐⭐</div>
+                        <span>{{ curtain.views }} marta ko'rildi</span>
+                        {% if curtain.stock_quantity %}
+                        <span style="color: #27ae60;">• {{ curtain.stock_quantity }} ta qoldi</span>
+                        {% endif %}
                     </div>
 
                     <div class="product-description" id="productDescription">
-                        Yuqori sifatli ipakdan tayyorlangan klassik uslubdagi parda. Bu parda mehmon xonangizga nafis va zamonaviy ko'rinish beradi. 
-                        Maxsus texnologiya yordamida ishlab chiqilgan bo'lib, uzoq muddat davomida o'z shaklini va rangini saqlab qoladi.
-                        <br><br>
+                        {{ curtain.content|linebreaks }}
+                        
+                        <br>
                         <strong>Xususiyatlari:</strong>
                         <ul style="margin-top: 1rem; padding-left: 1.5rem;">
-                            <li>100% tabiiy ipak to'qima</li>
-                            <li>Qo'l tikuvi bilan tayyorlangan</li>
-                            <li>UV nurlaridan himoya</li>
-                            <li>Oson parvarish qilish mumkin</li>
+                            <li>Mato turi: {{ curtain.get_fabric_type_display }}</li>
+                            {% if curtain.width and curtain.height %}
+                            <li>O'lcham: {{ curtain.width }} x {{ curtain.height }} sm</li>
+                            {% endif %}
+                            <li>Holati: {{ curtain.get_status_display }}</li>
+                            <li>Professiona tikuv</li>
                             <li>2 yil kafolat</li>
                         </ul>
                     </div>
 
                     <!-- Product Options -->
                     <div class="product-options">
-                        <!-- Size Options -->
+                        <!-- Colors -->
+                        {% if curtain.colors.all %}
+                        <div class="option-group">
+                            <label class="option-label">Mavjud ranglar:</label>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                {% for color in curtain.colors.all %}
+                                <div style="display: flex; align-items: center; gap: 0.5rem; padding: 5px 10px; background: var(--light-beige); border-radius: 15px;">
+                                    {% if color.hex_code %}
+                                    <span style="display: inline-block; width: 20px; height: 20px; background: {{ color.hex_code }}; border-radius: 50%; border: 1px solid #ccc;"></span>
+                                    {% endif %}
+                                    <span>{{ color.title }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Size Info -->
+                        {% if curtain.width and curtain.height %}
                         <div class="option-group">
                             <label class="option-label">O'lcham:</label>
-                            <div class="option-buttons" id="sizeOptions">
-                                <button class="option-btn active" data-size="150x200">150x200 sm</button>
-                                <button class="option-btn" data-size="200x250">200x250 sm</button>
-                                <button class="option-btn" data-size="250x300">250x300 sm</button>
-                                <button class="option-btn" data-size="custom">Maxsus o'lcham</button>
+                            <div style="padding: 10px; background: var(--light-beige); border-radius: 8px; color: var(--text-dark);">
+                                {{ curtain.width }} x {{ curtain.height }} sm
                             </div>
                         </div>
+                        {% endif %}
 
-                        <!-- Color Options -->
+                        <!-- Custom Size Option -->
                         <div class="option-group">
-                            <label class="option-label">Rang:</label>
-                            <div class="option-buttons" id="colorOptions">
-                                <button class="option-btn active" data-color="gold">Oltin</button>
-                                <button class="option-btn" data-color="beige">Bej</button>
-                                <button class="option-btn" data-color="cream">Krem</button>
-                                <button class="option-btn" data-color="brown">Jigarrang</button>
-                            </div>
-                        </div>
-
-                        <!-- Material Options -->
-                        <div class="option-group">
-                            <label class="option-label">Material:</label>
-                            <div class="option-buttons" id="materialOptions">
-                                <button class="option-btn active" data-material="silk">Ipak</button>
-                                <button class="option-btn" data-material="cotton">Paxta</button>
-                                <button class="option-btn" data-material="linen">Zig'ir</button>
-                                <button class="option-btn" data-material="velvet">Baxmal</button>
-                            </div>
+                            <label class="option-label">Maxsus o'lcham kerakmi?</label>
+                            <p style="font-size: 0.9rem; color: var(--text-light); margin: 5px 0;">Sizning derazangiz o'lchamiga mos parda tayyorlaymiz</p>
+                            <button class="btn btn-secondary" onclick="alert('Maxsus o\'lcham uchun bizga qo\'ng\'iroq qiling!')">Maxsus buyurtma</button>
                         </div>
                     </div>
 
                     <!-- Add to Cart Section -->
                     <div class="add-to-cart-section">
+                        {% if curtain.status == 'available' and curtain.stock_quantity > 0 %}
                         <div class="quantity-selector">
                             <label class="option-label" style="margin-bottom: 0;">Miqdori:</label>
                             <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
-                            <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="10">
+                            <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="{{ curtain.stock_quantity }}">
                             <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
                         </div>
-                        <button class="btn btn-primary" style="flex: 1;" onclick="addToCartDetail()">
-                            Savatga Qo'shish - <span id="totalPrice">350,000 so'm</span>
-                        </button>
+                        <a href="{% url 'orders:quick_order' curtain.id %}" class="btn btn-primary" style="flex: 1; text-align: center; display: flex; align-items: center; justify-content: center;">
+                            📞 Buyurtma Berish - {{ curtain.final_price|floatformat:0 }} so'm
+                        </a>
+                        {% else %}
+                        <div style="padding: 15px; background: #f39c12; color: white; border-radius: 8px; text-align: center; font-weight: bold;">
+                            {% if curtain.status == 'out_of_stock' %}
+                                Bu mahsulot hozirda tugagan
+                            {% elif curtain.status == 'discontinued' %}
+                                Bu mahsulot ishlab chiqarish to'xtatilgan
+                            {% else %}
+                                Bu mahsulot mavjud emas
+                            {% endif %}
+                        </div>
+                        {% endif %}
                     </div>
 
                     <!-- Additional Actions -->
@@ -129,44 +178,41 @@
             </div>
 
             <!-- Related Products -->
+            {% if similar_curtains %}
             <section class="section">
                 <h2 class="section-title">O'xshash Mahsulotlar</h2>
                 <div class="products-grid">
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 2 %}'">
-                        <div class="product-image">🎭</div>
+                    {% for similar_curtain in similar_curtains %}
+                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' similar_curtain.slug %}'">
+                        {% with main_image=similar_curtain.images.first %}
+                        <div class="product-image">
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ similar_curtain.title }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                            {% else %}
+                                <div style="width: 100%; height: 200px; background: var(--light-beige); display: flex; align-items: center; justify-content: center; font-size: 3rem; border-radius: 8px;">🏺</div>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
                         <div class="product-info">
-                            <h3 class="product-title">Zamonaviy Oq Parda</h3>
-                            <p class="product-description">Minimalist dizayn va yumshoq to'qimadan tayyorlangan</p>
-                            <div class="product-price">280,000 so'm</div>
+                            <h3 class="product-title">{{ similar_curtain.title }}</h3>
+                            <p class="product-description">{{ similar_curtain.content|truncatewords:15 }}</p>
+                            <div class="product-price">
+                                {% if similar_curtain.is_on_sale %}
+                                    <span style="text-decoration: line-through; color: #999; font-size: 0.9rem;">{{ similar_curtain.price|floatformat:0 }} so'm</span>
+                                    <span style="color: #e74c3c; font-weight: bold;">{{ similar_curtain.final_price|floatformat:0 }} so'm</span>
+                                {% else %}
+                                    {{ similar_curtain.price|floatformat:0 }} so'm
+                                {% endif %}
+                            </div>
                             <div class="product-actions">
-                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(2)">Savatga Qo'shish</button>
+                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart({{ similar_curtain.id }})">Savatga Qo'shish</button>
                             </div>
                         </div>
                     </div>
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 5 %}'">
-                        <div class="product-image">🏛️</div>
-                        <div class="product-info">
-                            <h3 class="product-title">Klassik Qizil Parda</h3>
-                            <p class="product-description">An'anaviy qizil rangdagi klassik parda</p>
-                            <div class="product-price">390,000 so'm</div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(5)">Savatga Qo'shish</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" onclick="window.location.href='{% url 'curtains:product_detail' 3 %}'">
-                        <div class="product-image">🌟</div>
-                        <div class="product-info">
-                            <h3 class="product-title">Hashamatli Bej Parda</h3>
-                            <p class="product-description">Premium to'qima va nozik tikuv bilan tayyorlangan</p>
-                            <div class="product-price">520,000 so'm</div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart(3)">Savatga Qo'shish</button>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </section>
+            {% endif %}
         </div>
     </main>
 
@@ -175,10 +221,48 @@
     <!-- JavaScript -->
     <script src="{% static 'js/scripts.js' %}"></script>
     <script>
-        // Initialize product detail functionality when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize product detail functionality
-            initializeProductDetail();
+        let basePrice = {{ curtain.final_price }};
+        
+        function changeQuantity(delta) {
+            const quantityInput = document.getElementById('quantity');
+            let quantity = parseInt(quantityInput.value) + delta;
+            
+            if (quantity < 1) quantity = 1;
+            if (quantity > {{ curtain.stock_quantity|default:10 }}) quantity = {{ curtain.stock_quantity|default:10 }};
+            
+            quantityInput.value = quantity;
+            updateTotalPrice();
+        }
+        
+        function updateTotalPrice() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const totalPrice = basePrice * quantity;
+            document.getElementById('totalPrice').textContent = totalPrice.toLocaleString() + ' so\'m';
+        }
+        
+        function addToCartDetail() {
+            const quantity = document.getElementById('quantity').value;
+            alert(`${quantity} ta mahsulot savatga qo'shildi! (Demo)`);
+        }
+        
+        function addToCart(curtainId) {
+            alert('Mahsulot savatga qo\'shildi! (Demo)');
+        }
+        
+        // Thumbnail image switching
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const newImage = this.dataset.image;
+                const mainImage = document.getElementById('mainImage');
+                if (newImage.startsWith('http') || newImage.startsWith('/')) {
+                    mainImage.innerHTML = `<img src="${newImage}" alt="{{ curtain.title }}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 8px;">`;
+                } else {
+                    mainImage.textContent = newImage;
+                }
+            });
         });
     </script>
 </body>

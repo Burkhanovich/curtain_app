@@ -1,0 +1,395 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtma Berish - {{ curtain.title }} - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav style="margin-bottom: 2rem;">
+                <a href="{% url 'curtains:index' %}" style="color: var(--text-light); text-decoration: none;">Bosh sahifa</a>
+                <span style="color: var(--text-light); margin: 0 0.5rem;">/</span>
+                <a href="{% url 'curtains:products' %}" style="color: var(--text-light); text-decoration: none;">Mahsulotlar</a>
+                <span style="color: var(--text-light); margin: 0 0.5rem;">/</span>
+                <a href="{% url 'curtains:product_detail' curtain.slug %}" style="color: var(--text-light); text-decoration: none;">{{ curtain.title }}</a>
+                <span style="color: var(--text-light); margin: 0 0.5rem;">/</span>
+                <span style="color: var(--primary-gold);">Buyurtma berish</span>
+            </nav>
+
+            <div class="order-container">
+                <div class="order-product-info">
+                    <h1>Buyurtma Berish</h1>
+                    
+                    <!-- Mahsulot ma'lumotlari -->
+                    <div class="product-summary">
+                        {% with main_image=curtain.images.first %}
+                        <div class="product-image">
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ curtain.title }}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px;">
+                            {% else %}
+                                <div style="width: 120px; height: 120px; background: var(--light-beige); display: flex; align-items: center; justify-content: center; font-size: 3rem; border-radius: 8px;">🏺</div>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                        
+                        <div class="product-details">
+                            <h2>{{ curtain.title }}</h2>
+                            <p>{{ curtain.category.title }}</p>
+                            <div class="product-price">
+                                {% if curtain.is_on_sale %}
+                                    <span style="text-decoration: line-through; color: #999; font-size: 0.9rem;">{{ curtain.price|floatformat:0 }} so'm</span>
+                                    <span style="color: #e74c3c; font-weight: bold; font-size: 1.2rem;">{{ curtain.final_price|floatformat:0 }} so'm</span>
+                                {% else %}
+                                    <span style="font-weight: bold; font-size: 1.2rem;">{{ curtain.price|floatformat:0 }} so'm</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-form-container">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="order-form">
+                        {% csrf_token %}
+                        {{ form.curtain_id }}
+                        
+                        <div class="form-section">
+                            <h3>Buyurtma Tafsilotlari</h3>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.quantity.id_for_label }}" class="form-label">
+                                    {{ form.quantity.label }}
+                                </label>
+                                {{ form.quantity }}
+                                {% if form.quantity.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.quantity.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Maxsus O'lchamlar (Ixtiyoriy)</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                                Agar sizga maxsus o'lchamdagi parda kerak bo'lsa, quyidagi maydonlarni to'ldiring
+                            </p>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="{{ form.custom_width.id_for_label }}" class="form-label">
+                                        {{ form.custom_width.label }}
+                                    </label>
+                                    {{ form.custom_width }}
+                                    {% if form.custom_width.errors %}
+                                        <div class="form-error">
+                                            {% for error in form.custom_width.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.custom_height.id_for_label }}" class="form-label">
+                                        {{ form.custom_height.label }}
+                                    </label>
+                                    {{ form.custom_height }}
+                                    {% if form.custom_height.errors %}
+                                        <div class="form-error">
+                                            {% for error in form.custom_height.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.custom_notes.id_for_label }}" class="form-label">
+                                    {{ form.custom_notes.label }}
+                                </label>
+                                {{ form.custom_notes }}
+                                {% if form.custom_notes.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.custom_notes.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Aloqa Ma'lumotlaringiz</h3>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.customer_name.id_for_label }}" class="form-label">
+                                    {{ form.customer_name.label }} <span class="required">*</span>
+                                </label>
+                                {{ form.customer_name }}
+                                {% if form.customer_name.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.customer_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.customer_phone.id_for_label }}" class="form-label">
+                                    {{ form.customer_phone.label }} <span class="required">*</span>
+                                </label>
+                                {{ form.customer_phone }}
+                                {% if form.customer_phone.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.customer_phone.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.customer_address.id_for_label }}" class="form-label">
+                                    {{ form.customer_address.label }} <span class="required">*</span>
+                                </label>
+                                {{ form.customer_address }}
+                                {% if form.customer_address.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.customer_address.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.notes.id_for_label }}" class="form-label">
+                                    {{ form.notes.label }}
+                                </label>
+                                {{ form.notes }}
+                                {% if form.notes.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.notes.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if form.non_field_errors %}
+                            <div class="form-error">
+                                {% for error in form.non_field_errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                📞 Buyurtma Berish
+                            </button>
+                            <a href="{% url 'curtains:product_detail' curtain.slug %}" class="btn btn-secondary">
+                                Orqaga
+                            </a>
+                        </div>
+
+                        <div class="order-note">
+                            <p><strong>💡 Eslatma:</strong> Buyurtmangizni qabul qilgandan so'ng, bizning sotuvchilarimiz siz bilan bog'lanib, barcha tafsilotlarni muhokama qilishadi va narxni aniqlashtiradi.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .order-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .order-product-info {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .product-summary {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-top: 1.5rem;
+        }
+
+        .product-details h2 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-details p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .order-form-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--light-beige);
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .order-form input, .order-form textarea, .order-form select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .order-form input:focus, .order-form textarea:focus, .order-form select:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .form-error {
+            margin-top: 0.5rem;
+        }
+
+        .form-error small {
+            color: #e74c3c;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #e74c3c;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #27ae60;
+            border: 1px solid #cfc;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-large {
+            padding: 16px 24px;
+            font-size: 1.1rem;
+        }
+
+        .order-note {
+            background: var(--light-beige);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .order-note p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .order-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1rem;
+            }
+            
+            .order-product-info {
+                position: static;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

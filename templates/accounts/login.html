@@ -1,0 +1,252 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-form-container">
+                    <div class="auth-header">
+                        <h1>Hisobga Kirish</h1>
+                        <p>Hisobingizga kirish uchun ma'lumotlaringizni kiriting</p>
+                    </div>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="auth-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                {{ form.username.label }}
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="form-error">
+                                    {% for error in form.username.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">
+                                {{ form.password.label }}
+                            </label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="form-error">
+                                    {% for error in form.password.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.remember_me }}
+                                <label for="{{ form.remember_me.id_for_label }}" class="form-check-label">
+                                    {{ form.remember_me.label }}
+                                </label>
+                            </div>
+                        </div>
+
+                        {% if form.non_field_errors %}
+                            <div class="form-error">
+                                {% for error in form.non_field_errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary w-full">
+                            Kirish
+                        </button>
+                    </form>
+
+                    <div class="auth-links">
+                        <p>Hisobingiz yo'qmi? <a href="{% url 'accounts:register' %}">Ro'yxatdan o'ting</a></p>
+                        <p><a href="#">Parolni unutdingizmi?</a></p>
+                    </div>
+                </div>
+
+                <div class="auth-info">
+                    <h3>Nima uchun ro'yxatdan o'tish kerak?</h3>
+                    <ul>
+                        <li>💎 Mahsulotlarni sevimlilar ro'yxatiga qo'shish</li>
+                        <li>🛍️ Oson va tez buyurtma berish</li>
+                        <li>📦 Buyurtma holatini kuzatish</li>
+                        <li>🎯 Maxsus chegirmalar va takliflar</li>
+                        <li>📍 Manzillaringizni saqlash</li>
+                        <li>⚡ Bir marta ma'lumot kiritib, har doim foydalanish</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .auth-form-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--text-light);
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-form .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-check input {
+            width: auto;
+        }
+
+        .form-error {
+            margin-top: 0.5rem;
+        }
+
+        .form-error small {
+            color: #e74c3c;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #e74c3c;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #27ae60;
+            border: 1px solid #cfc;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .auth-links p {
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-links a {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-info {
+            background: var(--light-beige);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .auth-info h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .auth-info li {
+            padding: 0.75rem 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 2rem;
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

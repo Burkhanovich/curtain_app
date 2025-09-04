@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan O'tish - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-form-container">
+                    <div class="auth-header">
+                        <h1>Ro'yxatdan O'tish</h1>
+                        <p>Yangi hisob yaratish uchun ma'lumotlaringizni kiriting</p>
+                    </div>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="auth-form" id="registerForm">
+                        {% csrf_token %}
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                    {{ form.first_name.label }}
+                                </label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.first_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                    {{ form.last_name.label }}
+                                </label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.last_name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                {{ form.username.label }}
+                            </label>
+                            {{ form.username }}
+                            <div class="availability-check" id="usernameCheck"></div>
+                            {% if form.username.errors %}
+                                <div class="form-error">
+                                    {% for error in form.username.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                {{ form.email.label }}
+                            </label>
+                            {{ form.email }}
+                            <div class="availability-check" id="emailCheck"></div>
+                            {% if form.email.errors %}
+                                <div class="form-error">
+                                    {% for error in form.email.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                {{ form.phone.label }} (ixtiyoriy)
+                            </label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <div class="form-error">
+                                    {% for error in form.phone.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label">
+                                    {{ form.password1.label }}
+                                </label>
+                                {{ form.password1 }}
+                                {% if form.password1.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.password1.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label">
+                                    {{ form.password2.label }}
+                                </label>
+                                {{ form.password2 }}
+                                {% if form.password2.errors %}
+                                    <div class="form-error">
+                                        {% for error in form.password2.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.terms_agreement }}
+                                <label for="{{ form.terms_agreement.id_for_label }}" class="form-check-label">
+                                    {{ form.terms_agreement.label }} va <a href="#">Maxfiylik siyosati</a>ni o'qib chiqdim
+                                </label>
+                            </div>
+                            {% if form.terms_agreement.errors %}
+                                <div class="form-error">
+                                    {% for error in form.terms_agreement.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if form.non_field_errors %}
+                            <div class="form-error">
+                                {% for error in form.non_field_errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary w-full">
+                            Ro'yxatdan O'tish
+                        </button>
+                    </form>
+
+                    <div class="auth-links">
+                        <p>Hisobingiz bormi? <a href="{% url 'accounts:login' %}">Kirish</a></p>
+                    </div>
+                </div>
+
+                <div class="auth-info">
+                    <h3>Navoi Curtain'ga Xush Kelibsiz!</h3>
+                    <ul>
+                        <li>🏺 Premium sifatli pardalar</li>
+                        <li>🎨 300+ turli xil dizayn va rang</li>
+                        <li>📐 Maxsus o'lchamlarda tayyorlash</li>
+                        <li>🚚 Tez va bepul yetkazib berish</li>
+                        <li>🔧 Professional o'rnatish xizmati</li>
+                        <li>🛡️ 2 yillik sifat kafolati</li>
+                        <li>💰 Eng yaxshi narxlar Navoida</li>
+                        <li>📞 24/7 mijozlar xizmati</li>
+                    </ul>
+                    
+                    <div class="contact-info">
+                        <h4>Bog'lanish:</h4>
+                        <p>📱 +998 90 123 45 67</p>
+                        <p>📧 info@navoicurtain.uz</p>
+                        <p>📍 Navoi, Mustaqillik ko'chasi 25</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .auth-form-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--text-light);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-form .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .form-check input {
+            width: auto;
+            margin-top: 0.25rem;
+        }
+
+        .form-error {
+            margin-top: 0.5rem;
+        }
+
+        .form-error small {
+            color: #e74c3c;
+        }
+
+        .availability-check {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .availability-check.available {
+            color: #27ae60;
+        }
+
+        .availability-check.unavailable {
+            color: #e74c3c;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #e74c3c;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #27ae60;
+            border: 1px solid #cfc;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .auth-links a {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-info {
+            background: var(--light-beige);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .auth-info h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-info ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .auth-info li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .contact-info {
+            border-top: 1px solid var(--primary-gold);
+            padding-top: 1.5rem;
+        }
+
+        .contact-info h4 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        // Username availability check
+        document.getElementById('id_username').addEventListener('blur', function() {
+            const username = this.value.trim();
+            if (username.length >= 3) {
+                checkUsernameAvailability(username);
+            }
+        });
+
+        // Email availability check
+        document.getElementById('id_email').addEventListener('blur', function() {
+            const email = this.value.trim();
+            if (email && email.includes('@')) {
+                checkEmailAvailability(email);
+            }
+        });
+
+        function checkUsernameAvailability(username) {
+            fetch('{% url "accounts:check_username" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: `username=${encodeURIComponent(username)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const checkElement = document.getElementById('usernameCheck');
+                checkElement.textContent = data.message;
+                checkElement.className = `availability-check ${data.available ? 'available' : 'unavailable'}`;
+            });
+        }
+
+        function checkEmailAvailability(email) {
+            fetch('{% url "accounts:check_email" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: `email=${encodeURIComponent(email)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const checkElement = document.getElementById('emailCheck');
+                checkElement.textContent = data.message;
+                checkElement.className = `availability-check ${data.available ? 'available' : 'unavailable'}`;
+            });
+        }
+    </script>
+</body>
+</html>
