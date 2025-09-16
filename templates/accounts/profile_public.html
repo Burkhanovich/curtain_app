@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile_user.get_full_name|default:profile_user.username }} - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="public-profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        {% if profile and profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" alt="{{ profile_user.get_full_name|default:profile_user.username }}">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                {{ profile_user.get_full_name.0|default:profile_user.username.0|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h1>{{ profile_user.get_full_name|default:profile_user.username }}</h1>
+                        <p class="username">@{{ profile_user.username }}</p>
+                        {% if profile and profile.bio %}
+                            <p class="bio">{{ profile.bio }}</p>
+                        {% endif %}
+                        
+                        <div class="profile-stats">
+                            <span class="stat">
+                                <strong>A'zo bo'lgan:</strong> {{ profile_user.date_joined|date:"F Y" }}
+                            </span>
+                            {% if profile_user.last_login %}
+                                <span class="stat">
+                                    <strong>Oxirgi faollik:</strong> {{ profile_user.last_login|date:"F Y" }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if profile %}
+                    <div class="profile-details">
+                        {% if profile.location %}
+                            <div class="detail-item">
+                                <span class="icon">📍</span>
+                                <span class="label">Joylashuv:</span>
+                                <span class="value">{{ profile.location }}</span>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.website %}
+                            <div class="detail-item">
+                                <span class="icon">🌐</span>
+                                <span class="label">Veb-sayt:</span>
+                                <a href="{{ profile.website }}" target="_blank" rel="noopener" class="value link">
+                                    {{ profile.website }}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.phone and profile.show_phone %}
+                            <div class="detail-item">
+                                <span class="icon">📞</span>
+                                <span class="label">Telefon:</span>
+                                <span class="value">{{ profile.phone }}</span>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.birth_date and profile.show_birth_date %}
+                            <div class="detail-item">
+                                <span class="icon">🎂</span>
+                                <span class="label">Tug'ilgan sana:</span>
+                                <span class="value">{{ profile.birth_date|date:"d F" }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <div class="profile-actions">
+                    {% if user.is_authenticated and user != profile_user %}
+                        <a href="#" class="btn btn-primary">Xabar Yuborish</a>
+                        <a href="#" class="btn btn-secondary">Do'st Qo'shish</a>
+                    {% elif user == profile_user %}
+                        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Profilni Tahrirlash</a>
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">Boshqaruv Paneli</a>
+                    {% endif %}
+                </div>
+
+                {% if not user.is_authenticated %}
+                    <div class="login-prompt">
+                        <p>To'liq ma'lumotlarni ko'rish uchun <a href="{% url 'accounts:login' %}">tizimga kiring</a> yoki <a href="{% url 'accounts:register' %}">ro'yxatdan o'ting</a></p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .public-profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--light-beige);
+        }
+
+        .avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            border: 4px solid var(--light-beige);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h1 {
+            margin: 0 0 0.5rem 0;
+            color: var(--dark-brown);
+            font-size: 2rem;
+        }
+
+        .username {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .bio {
+            color: var(--dark-brown);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .stat strong {
+            color: var(--dark-brown);
+        }
+
+        .profile-details {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-beige);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item .icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .detail-item .label {
+            font-weight: 600;
+            color: var(--dark-brown);
+            min-width: 120px;
+        }
+
+        .detail-item .value {
+            color: var(--text-secondary);
+        }
+
+        .detail-item .link {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .detail-item .link:hover {
+            text-decoration: underline;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-brown);
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: var(--light-beige);
+            color: var(--dark-brown);
+        }
+
+        .btn-secondary:hover {
+            background: var(--beige);
+            text-decoration: none;
+            color: var(--dark-brown);
+        }
+
+        .login-prompt {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            text-align: center;
+        }
+
+        .login-prompt p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        .login-prompt a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .public-profile-container {
+                padding: 1rem;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-stats {
+                justify-content: center;
+            }
+            
+            .profile-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .detail-item {
+                flex-wrap: wrap;
+            }
+            
+            .detail-item .label {
+                min-width: auto;
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

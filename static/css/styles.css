@@ -20,9 +20,11 @@ body {
 
 /* ===== COLOR PALETTE ===== */
 :root {
+    --primary-color: #8b4513;
     --primary-gold: #d4af37;
     --light-gold: #f5e6a3;
     --dark-gold: #b8941f;
+    --dark-brown: #654321;
     --beige: #f5f5dc;
     --light-beige: #faf8f3;
     --dark-beige: #e6e2d3;
@@ -32,6 +34,7 @@ body {
     --dark-gray: #2c2c2c;
     --text-dark: #333333;
     --text-light: #666666;
+    --text-secondary: #666666;
     --border-light: #e8e8e8;
     --shadow: rgba(0, 0, 0, 0.1);
 }

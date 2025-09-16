@@ -1,0 +1,295 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilni Tahrirlash - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="profile-edit-container">
+                <h1>Profilni Tahrirlash</h1>
+                
+                <div class="form-container">
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data" class="profile-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section">
+                            <h3>Asosiy Ma'lumotlar</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="{{ user_form.first_name.id_for_label }}">Ism:</label>
+                                    {{ user_form.first_name }}
+                                    {% if user_form.first_name.errors %}
+                                        <div class="field-errors">
+                                            {% for error in user_form.first_name.errors %}
+                                                <span class="error">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ user_form.last_name.id_for_label }}">Familiya:</label>
+                                    {{ user_form.last_name }}
+                                    {% if user_form.last_name.errors %}
+                                        <div class="field-errors">
+                                            {% for error in user_form.last_name.errors %}
+                                                <span class="error">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ user_form.email.id_for_label }}">Email:</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="field-errors">
+                                        {% for error in user_form.email.errors %}
+                                            <span class="error">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if user_form.phone %}
+                                <div class="form-group">
+                                    <label for="{{ user_form.phone.id_for_label }}">Telefon:</label>
+                                    {{ user_form.phone }}
+                                    {% if user_form.phone.errors %}
+                                        <div class="field-errors">
+                                            {% for error in user_form.phone.errors %}
+                                                <span class="error">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if profile_form %}
+                            <div class="form-section">
+                                <h3>Qo'shimcha Ma'lumotlar</h3>
+                                
+                                {% for field in profile_form %}
+                                    <div class="form-group">
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="field-errors">
+                                                {% for error in field.errors %}
+                                                    <span class="error">{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        {% if field.help_text %}
+                                            <small class="help-text">{{ field.help_text }}</small>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Saqlash</button>
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Bekor Qilish</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .profile-edit-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .form-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--light-beige);
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .form-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-brown);
+            font-size: 1.3rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-brown);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-beige);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .field-errors {
+            margin-top: 0.5rem;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .help-text {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-start;
+            padding-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-brown);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--light-beige);
+            color: var(--dark-brown);
+        }
+
+        .btn-secondary:hover {
+            background: var(--beige);
+            text-decoration: none;
+            color: var(--dark-brown);
+        }
+
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .profile-edit-container {
+                padding: 1rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
