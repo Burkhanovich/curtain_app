@@ -61,25 +61,26 @@ class Order(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.order_number:
-            # Buyurtma raqamini avtomatik yaratish
             from datetime import datetime
+            from django.db import transaction
             now = datetime.now()
-            last_order = Order.objects.filter(
-                created_date__date=now.date()
-            ).order_by('-id').first()
-            
-            if last_order and last_order.order_number:
-                # Bugungi oxirgi buyurtma raqamidan keyingisini yaratish
-                try:
-                    last_num = int(last_order.order_number.split('-')[-1])
-                    new_num = last_num + 1
-                except (ValueError, IndexError):
+            with transaction.atomic():
+                last_order = (
+                    Order.objects.select_for_update()
+                    .filter(created_date__date=now.date())
+                    .order_by('-id')
+                    .first()
+                )
+                if last_order and last_order.order_number:
+                    try:
+                        last_num = int(last_order.order_number.split('-')[-1])
+                        new_num = last_num + 1
+                    except (ValueError, IndexError):
+                        new_num = 1
+                else:
                     new_num = 1
-            else:
-                new_num = 1
-            
-            self.order_number = f"NC-{now.strftime('%Y%m%d')}-{new_num:03d}"
-        
+                self.order_number = f"NC-{now.strftime('%Y%m%d')}-{new_num:03d}"
+
         super().save(*args, **kwargs)
     
     def get_total_items_count(self):

@@ -9,6 +9,7 @@ from django.utils import timezone
 from apps.curtains.models import Curtain
 from .models import Order, OrderItem
 from .forms import QuickOrderForm, OrderForm, OrderSearchForm
+from .telegram import send_order_notification
 
 
 def quick_order_view(request, curtain_id):
@@ -38,10 +39,12 @@ def quick_order_view(request, curtain_id):
                 custom_notes=form.cleaned_data.get('custom_notes')
             )
             
+            send_order_notification(order)
+
             messages.success(
-                request, 
+                request,
                 f'Buyurtmangiz qabul qilindi! Buyurtma raqami: #{order.order_number}. '
-                'Tez orada sotuvchilarimiz siz bilan bog\'lanishadi.'
+                "Tez orada sotuvchilarimiz siz bilan bog'lanishadi."
             )
             return redirect('orders:order_success', order_number=order.order_number)
         else:
@@ -118,14 +121,15 @@ def cancel_order_view(request, order_number):
     
     # Faqat "kutilmoqda" va "tasdiqlangan" holatdagi buyurtmalarni bekor qilish mumkin
     if order.status in ['pending', 'confirmed']:
+        old_status = order.status
         order.status = 'cancelled'
         order.save()
-        
+
         # Status tarixi yaratish
         from .models import OrderStatusHistory
         OrderStatusHistory.objects.create(
             order=order,
-            old_status=order.status,
+            old_status=old_status,
             new_status='cancelled',
             changed_by=request.user,
             comment='Mijoz tomonidan bekor qilindi'
@@ -237,6 +241,7 @@ def update_order_status_view(request, order_id):
     return JsonResponse({'success': False, 'message': 'Noto\'g\'ri holat'})
 
 
+@login_required
 def order_stats_api_view(request):
     """Buyurtma statistikasi (AJAX uchun)"""
     if not request.user.is_staff:

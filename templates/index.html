@@ -20,7 +20,10 @@
             <div class="container">
                 <h1>Uyingizni <span class="golden">Go'zal</span> Qiling</h1>
                 <p>Sifatli pardalar va uy tekstili mahsulotlari bilan uyingizni zamonaviy va qulay qiling. Eng yaxshi narxlarda premium sifat.</p>
-                <a href="{% url 'curtains:products' %}" class="btn btn-primary">Mahsulotlarni Ko'rish</a>
+                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                    <a href="{% url 'curtains:products' %}" class="btn btn-primary">Mahsulotlarni Ko'rish</a>
+                    <a href="{% url 'curtains:contact' %}" class="btn btn-secondary">Bog'lanish</a>
+                </div>
             </div>
         </section>
 

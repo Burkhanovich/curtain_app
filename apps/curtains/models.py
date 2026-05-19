@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import F
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 
@@ -80,6 +82,17 @@ class Curtain(models.Model):
             models.Index(fields=['is_featured', 'is_active']),
         ]
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Curtain.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -92,8 +105,7 @@ class Curtain(models.Model):
         return self.discount_price if self.is_on_sale else self.price
 
     def increment_views(self):
-        self.views += 1
-        self.save(update_fields=['views'])
+        Curtain.objects.filter(pk=self.pk).update(views=F('views') + 1)
 
 
 class CurtainImage(models.Model):

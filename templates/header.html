@@ -1,7 +1,8 @@
-<!-- Header Component -->
+<!-- Header -->
 <header class="header">
     <div class="container">
         <div class="header-content">
+
             <!-- Logo -->
             <div class="logo">
                 <a href="{% url 'curtains:index' %}">
@@ -14,42 +15,46 @@
                 <ul class="nav-list">
                     <li><a href="{% url 'curtains:index' %}" class="nav-link">Bosh sahifa</a></li>
                     <li class="nav-dropdown">
-                        <a href="{% url 'curtains:products' %}" class="nav-link">Mahsulotlar ▼</a>
+                        <a href="{% url 'curtains:products' %}" class="nav-link">Mahsulotlar ▾</a>
                         <div class="dropdown-menu">
-                            <a href="{% url 'curtains:products' %}?category=classic" class="dropdown-link">Klassik Pardalar</a>
-                            <a href="{% url 'curtains:products' %}?category=modern" class="dropdown-link">Zamonaviy Pardalar</a>
-                            <a href="{% url 'curtains:products' %}?category=luxury" class="dropdown-link">Hashamatli Pardalar</a>
-                            <a href="{% url 'curtains:products' %}?category=accessories" class="dropdown-link">Aksessuarlar</a>
+                            <a href="{% url 'curtains:products' %}?category=classic"      class="dropdown-link">Klassik Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=modern"       class="dropdown-link">Zamonaviy Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=luxury"       class="dropdown-link">Hashamatli Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=accessories"  class="dropdown-link">Aksessuarlar</a>
                         </div>
                     </li>
-                    <li><a href="#about" class="nav-link scroll-link">Biz Haqimizda</a></li>
-                    <li><a href="#services" class="nav-link scroll-link">Xizmatlar</a></li>
+                    <li><a href="{% url 'curtains:index' %}#about"    class="nav-link scroll-link">Biz Haqimizda</a></li>
+                    <li><a href="{% url 'curtains:index' %}#services" class="nav-link scroll-link">Xizmatlar</a></li>
                     <li><a href="{% url 'curtains:contact' %}" class="nav-link">Aloqa</a></li>
                 </ul>
             </nav>
 
-            <!-- Header Actions -->
+            <!-- Actions -->
             <div class="header-actions">
                 <!-- Search -->
-                <div class="search-box">
-                    <input type="text" placeholder="Qidirish..." class="search-input">
-                    <button class="search-btn">🔍</button>
-                </div>
+                <form method="get" action="{% url 'curtains:products' %}" class="search-box" role="search">
+                    <input type="text" name="search" class="search-input" placeholder="Qidirish..." autocomplete="off">
+                    <button type="submit" class="search-btn" aria-label="Qidirish">🔍</button>
+                </form>
 
+                <!-- Cart -->
+                <a href="{% url 'curtains:cart' %}" class="cart-link" aria-label="Savat">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
 
                 <!-- User Account -->
                 <div class="user-menu">
                     {% if user.is_authenticated %}
-                        <button class="user-btn">👤 {{ user.get_short_name }}</button>
+                        <button class="user-btn" aria-label="Foydalanuvchi">👤</button>
                         <div class="user-dropdown">
                             <a href="{% url 'accounts:profile' %}">Profil</a>
-                            <a href="{% url 'accounts:dashboard' %}">Boshqaruv Paneli</a>
-                            <a href="{% url 'accounts:address_list' %}">Manzillar</a>
-                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--light-beige);">
+                            <a href="{% url 'orders:my_orders' %}">Buyurtmalarim</a>
+                            <hr>
                             <a href="{% url 'accounts:logout' %}">Chiqish</a>
                         </div>
                     {% else %}
-                        <button class="user-btn">👤</button>
+                        <button class="user-btn" aria-label="Kirish">👤</button>
                         <div class="user-dropdown">
                             <a href="{% url 'accounts:login' %}">Kirish</a>
                             <a href="{% url 'accounts:register' %}">Ro'yxatdan o'tish</a>
@@ -58,24 +63,28 @@
                 </div>
             </div>
 
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn">☰</button>
+            <!-- Mobile toggle -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menyu">☰</button>
         </div>
     </div>
 
-    <!-- Mobile Navigation -->
-    <nav class="nav-mobile">
-        <ul class="nav-mobile-list">
-            <li><a href="{% url 'curtains:index' %}" class="nav-mobile-link">Bosh sahifa</a></li>
-            <li><a href="{% url 'curtains:products' %}" class="nav-mobile-link">Mahsulotlar</a></li>
-            <li><a href="{% url 'curtains:contact' %}" class="nav-mobile-link">Aloqa</a></li>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'accounts:profile' %}" class="nav-mobile-link">Profil</a></li>
-                <li><a href="{% url 'accounts:logout' %}" class="nav-mobile-link">Chiqish</a></li>
-            {% else %}
-                <li><a href="{% url 'accounts:login' %}" class="nav-mobile-link">Kirish</a></li>
-                <li><a href="{% url 'accounts:register' %}" class="nav-mobile-link">Ro'yxatdan o'tish</a></li>
-            {% endif %}
-        </ul>
+    <!-- Mobile Nav -->
+    <nav class="nav-mobile" id="navMobile">
+        <div class="container">
+            <ul class="nav-mobile-list">
+                <li><a href="{% url 'curtains:index' %}"    class="nav-mobile-link">Bosh sahifa</a></li>
+                <li><a href="{% url 'curtains:products' %}" class="nav-mobile-link">Mahsulotlar</a></li>
+                <li><a href="{% url 'curtains:cart' %}"     class="nav-mobile-link">Savat</a></li>
+                <li><a href="{% url 'curtains:contact' %}"  class="nav-mobile-link">Aloqa</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'orders:my_orders' %}"  class="nav-mobile-link">Buyurtmalarim</a></li>
+                    <li><a href="{% url 'accounts:profile' %}"  class="nav-mobile-link">Profil</a></li>
+                    <li><a href="{% url 'accounts:logout' %}"   class="nav-mobile-link">Chiqish</a></li>
+                {% else %}
+                    <li><a href="{% url 'accounts:login' %}"    class="nav-mobile-link">Kirish</a></li>
+                    <li><a href="{% url 'accounts:register' %}" class="nav-mobile-link">Ro'yxatdan o'tish</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
 </header>

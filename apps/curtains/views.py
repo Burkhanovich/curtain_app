@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.http import JsonResponse
+from django.urls import reverse
+from django.views.decorators.http import require_POST
+from django.contrib import messages
 from .models import Curtain, Category, Color
+from .cart import Cart
 
 
 def index(request):
@@ -176,7 +180,7 @@ def search_autocomplete(request):
         suggestions.append({
             'title': curtain.title,
             'category': curtain.category.title if curtain.category else '',
-            'url': f'/product/{curtain.slug}/',
+            'url': reverse('curtains:product_detail', kwargs={'slug': curtain.slug}),
             'image': main_image.image.url if main_image else ''
         })
     
@@ -185,12 +189,103 @@ def search_autocomplete(request):
 
 def cart(request):
     """Savat sahifasi"""
-    return render(request, 'cart.html')
+    cart_obj = Cart(request)
+    cart_items = list(cart_obj)
+    return render(request, 'cart.html', {'cart': cart_obj, 'cart_items': cart_items})
+
+
+@require_POST
+def cart_add(request, curtain_id):
+    """Savatga mahsulot qo'shish"""
+    curtain = get_object_or_404(Curtain, id=curtain_id, is_active=True)
+    cart = Cart(request)
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        quantity = max(1, min(quantity, 10))
+    except (ValueError, TypeError):
+        quantity = 1
+    cart.add(curtain, quantity)
+    messages.success(request, f'"{curtain.title}" savatga qo\'shildi.')
+    return redirect('curtains:cart')
+
+
+@require_POST
+def cart_remove(request, curtain_id):
+    """Savatdan mahsulot o'chirish"""
+    cart = Cart(request)
+    cart.remove(curtain_id)
+    return redirect('curtains:cart')
+
+
+@require_POST
+def cart_update(request, curtain_id):
+    """Savat mahsulot miqdorini yangilash"""
+    cart = Cart(request)
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+    cart.update_quantity(curtain_id, quantity)
+    return redirect('curtains:cart')
+
+
+def cart_count(request):
+    """Savat mahsulotlar soni (AJAX uchun)"""
+    cart = Cart(request)
+    return JsonResponse({'count': len(cart)})
 
 
 def checkout(request):
     """Buyurtma berish sahifasi"""
-    return render(request, 'checkout.html')
+    from apps.orders.forms import OrderForm
+    from apps.orders.models import Order, OrderItem
+    from apps.orders.telegram import send_order_notification
+
+    cart_obj = Cart(request)
+    cart_items = list(cart_obj)
+
+    if not cart_items:
+        messages.warning(request, "Savat bo'sh. Avval mahsulot qo'shing.")
+        return redirect('curtains:products')
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = Order.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                customer_name=form.cleaned_data['customer_name'],
+                customer_phone=form.cleaned_data['customer_phone'],
+                customer_address=form.cleaned_data['customer_address'],
+                notes=form.cleaned_data.get('notes', ''),
+            )
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    curtain=item['curtain'],
+                    quantity=item['quantity'],
+                    unit_price=item['price'],
+                )
+            send_order_notification(order)
+            cart_obj.clear()
+            messages.success(
+                request,
+                f"Buyurtmangiz qabul qilindi! Buyurtma raqami: #{order.order_number}."
+            )
+            return redirect('orders:order_success', order_number=order.order_number)
+        else:
+            messages.error(request, "Formada xatoliklar mavjud. Iltimos, to'g'rilang.")
+    else:
+        initial = {}
+        if request.user.is_authenticated:
+            initial['customer_name'] = request.user.get_full_name()
+        form = OrderForm(initial=initial)
+
+    context = {
+        'cart': cart_obj,
+        'cart_items': cart_items,
+        'form': form,
+    }
+    return render(request, 'checkout.html', context)
 
 
 def contact(request):

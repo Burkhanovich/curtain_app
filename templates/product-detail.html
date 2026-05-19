@@ -205,7 +205,9 @@
                                 {% endif %}
                             </div>
                             <div class="product-actions">
-                                <button class="btn btn-primary w-full" onclick="event.stopPropagation(); addToCart({{ similar_curtain.id }})">Savatga Qo'shish</button>
+                                <a href="{% url 'orders:quick_order' similar_curtain.id %}" class="btn btn-primary w-full" onclick="event.stopPropagation();">
+                                    Buyurtma Berish
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -238,15 +240,6 @@
             const quantity = parseInt(document.getElementById('quantity').value);
             const totalPrice = basePrice * quantity;
             document.getElementById('totalPrice').textContent = totalPrice.toLocaleString() + ' so\'m';
-        }
-        
-        function addToCartDetail() {
-            const quantity = document.getElementById('quantity').value;
-            alert(`${quantity} ta mahsulot savatga qo'shildi! (Demo)`);
-        }
-        
-        function addToCart(curtainId) {
-            alert('Mahsulot savatga qo\'shildi! (Demo)');
         }
         
         // Thumbnail image switching

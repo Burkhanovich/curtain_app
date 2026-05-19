@@ -3,6 +3,22 @@ from django.utils.translation import gettext_lazy as _
 from .models import Order, OrderItem
 
 
+def validate_uzbek_phone(phone):
+    cleaned = ''.join(filter(str.isdigit, phone))
+    if not cleaned.startswith('998'):
+        if len(cleaned) == 9:
+            cleaned = '998' + cleaned
+        else:
+            raise forms.ValidationError(
+                "Telefon raqam noto'g'ri formatda. Masalan: +998 90 123 45 67"
+            )
+    if len(cleaned) != 12:
+        raise forms.ValidationError(
+            "Telefon raqam to'liq emas. 12 raqamdan iborat bo'lishi kerak."
+        )
+    return f"+{cleaned[:3]} {cleaned[3:5]} {cleaned[5:8]} {cleaned[8:10]} {cleaned[10:12]}"
+
+
 class OrderForm(forms.ModelForm):
     """Buyurtma berish formasi"""
     
@@ -46,25 +62,9 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['customer_name', 'customer_phone', 'customer_address', 'notes']
-    
+
     def clean_customer_phone(self):
-        phone = self.cleaned_data.get('customer_phone')
-        
-        # Telefon raqamni tozalash
-        cleaned_phone = ''.join(filter(str.isdigit, phone))
-        
-        # Uzbekiston telefon raqami formatini tekshirish
-        if not cleaned_phone.startswith('998'):
-            if len(cleaned_phone) == 9:  # 90 123 45 67
-                cleaned_phone = '998' + cleaned_phone
-            else:
-                raise forms.ValidationError('Telefon raqam noto\'g\'ri formatda. Masalan: +998 90 123 45 67')
-        
-        if len(cleaned_phone) != 12:
-            raise forms.ValidationError('Telefon raqam to\'liq emas. 12 raqamdan iborat bo\'lishi kerak.')
-        
-        # Formatlangan ko'rinishda qaytarish
-        return f"+{cleaned_phone[:3]} {cleaned_phone[3:5]} {cleaned_phone[5:8]} {cleaned_phone[8:10]} {cleaned_phone[10:12]}"
+        return validate_uzbek_phone(self.cleaned_data.get('customer_phone', ''))
 
 
 class QuickOrderForm(forms.Form):
@@ -150,23 +150,7 @@ class QuickOrderForm(forms.Form):
     )
     
     def clean_customer_phone(self):
-        phone = self.cleaned_data.get('customer_phone')
-        
-        # Telefon raqamni tozalash
-        cleaned_phone = ''.join(filter(str.isdigit, phone))
-        
-        # Uzbekiston telefon raqami formatini tekshirish
-        if not cleaned_phone.startswith('998'):
-            if len(cleaned_phone) == 9:  # 90 123 45 67
-                cleaned_phone = '998' + cleaned_phone
-            else:
-                raise forms.ValidationError('Telefon raqam noto\'g\'ri formatda. Masalan: +998 90 123 45 67')
-        
-        if len(cleaned_phone) != 12:
-            raise forms.ValidationError('Telefon raqam to\'liq emas. 12 raqamdan iborat bo\'lishi kerak.')
-        
-        # Formatlangan ko'rinishda qaytarish
-        return f"+{cleaned_phone[:3]} {cleaned_phone[3:5]} {cleaned_phone[5:8]} {cleaned_phone[8:10]} {cleaned_phone[10:12]}"
+        return validate_uzbek_phone(self.cleaned_data.get('customer_phone', ''))
 
 
 class OrderStatusUpdateForm(forms.ModelForm):
