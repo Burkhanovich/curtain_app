@@ -73,10 +73,16 @@ def products(request):
         curtains = curtains.filter(fabric_type=fabric_type)
     
     if min_price:
-        curtains = curtains.filter(price__gte=min_price)
-    
+        try:
+            curtains = curtains.filter(price__gte=int(min_price))
+        except (ValueError, TypeError):
+            min_price = None
+
     if max_price:
-        curtains = curtains.filter(price__lte=max_price)
+        try:
+            curtains = curtains.filter(price__lte=int(max_price))
+        except (ValueError, TypeError):
+            max_price = None
     
     if search:
         curtains = curtains.filter(

@@ -357,6 +357,33 @@ h5 { font-size: 1rem; }
 .user-dropdown a:hover { background: var(--light-gray); color: var(--text-dark); }
 .user-dropdown hr { border: none; border-top: 1px solid var(--border-light); margin: 4px 0; }
 
+/* Logout tugmasi linkka o'xshab ko'rinishi uchun */
+.logout-form { margin: 0; }
+.user-dropdown .logout-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--transition), color var(--transition);
+}
+.user-dropdown .logout-btn:hover { background: var(--light-gray); color: var(--text-dark); }
+.nav-mobile-link.logout-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 /* Mobile */
 .mobile-menu-btn {
     display: none;

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
@@ -116,7 +116,9 @@ def change_password_view(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            # Parol o'zgargandan keyin sessiya hash'ini yangilash (aks holda foydalanuvchi chiqib ketadi)
+            update_session_auth_hash(request, user)
             messages.success(request, 'Parolingiz muvaffaqiyatli o\'zgartirildi.')
             return redirect('accounts:profile')
         else:

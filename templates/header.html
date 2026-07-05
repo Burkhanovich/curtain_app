@@ -17,10 +17,10 @@
                     <li class="nav-dropdown">
                         <a href="{% url 'curtains:products' %}" class="nav-link">Mahsulotlar ▾</a>
                         <div class="dropdown-menu">
-                            <a href="{% url 'curtains:products' %}?category=classic"      class="dropdown-link">Klassik Pardalar</a>
-                            <a href="{% url 'curtains:products' %}?category=modern"       class="dropdown-link">Zamonaviy Pardalar</a>
-                            <a href="{% url 'curtains:products' %}?category=luxury"       class="dropdown-link">Hashamatli Pardalar</a>
-                            <a href="{% url 'curtains:products' %}?category=accessories"  class="dropdown-link">Aksessuarlar</a>
+                            <a href="{% url 'curtains:products' %}?category=Klassik"      class="dropdown-link">Klassik Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=Zamonaviy"    class="dropdown-link">Zamonaviy Pardalar</a>
+                            <a href="{% url 'curtains:products' %}?category=Hashamatli"   class="dropdown-link">Hashamatli Pardalar</a>
+                            <a href="{% url 'curtains:products' %}"                       class="dropdown-link">Barcha Pardalar</a>
                         </div>
                     </li>
                     <li><a href="{% url 'curtains:index' %}#about"    class="nav-link scroll-link">Biz Haqimizda</a></li>
@@ -51,7 +51,10 @@
                             <a href="{% url 'accounts:profile' %}">Profil</a>
                             <a href="{% url 'orders:my_orders' %}">Buyurtmalarim</a>
                             <hr>
-                            <a href="{% url 'accounts:logout' %}">Chiqish</a>
+                            <form method="post" action="{% url 'accounts:logout' %}" class="logout-form">
+                                {% csrf_token %}
+                                <button type="submit" class="logout-btn">Chiqish</button>
+                            </form>
                         </div>
                     {% else %}
                         <button class="user-btn" aria-label="Kirish">👤</button>
@@ -79,7 +82,12 @@
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'orders:my_orders' %}"  class="nav-mobile-link">Buyurtmalarim</a></li>
                     <li><a href="{% url 'accounts:profile' %}"  class="nav-mobile-link">Profil</a></li>
-                    <li><a href="{% url 'accounts:logout' %}"   class="nav-mobile-link">Chiqish</a></li>
+                    <li>
+                        <form method="post" action="{% url 'accounts:logout' %}" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-mobile-link logout-btn">Chiqish</button>
+                        </form>
+                    </li>
                 {% else %}
                     <li><a href="{% url 'accounts:login' %}"    class="nav-mobile-link">Kirish</a></li>
                     <li><a href="{% url 'accounts:register' %}" class="nav-mobile-link">Ro'yxatdan o'tish</a></li>

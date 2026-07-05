@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtmalarni Boshqarish - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="management-page">
+                <h1 class="page-title">Buyurtmalarni Boshqarish</h1>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-value">{{ stats.total_orders }}</span><span class="stat-label">Jami</span></div>
+                    <div class="stat-card"><span class="stat-value">{{ stats.pending_orders }}</span><span class="stat-label">Kutilmoqda</span></div>
+                    <div class="stat-card"><span class="stat-value">{{ stats.confirmed_orders }}</span><span class="stat-label">Tasdiqlangan</span></div>
+                    <div class="stat-card"><span class="stat-value">{{ stats.completed_orders }}</span><span class="stat-label">Yetkazilgan</span></div>
+                    <div class="stat-card"><span class="stat-value">{{ stats.today_orders }}</span><span class="stat-label">Bugungi</span></div>
+                </div>
+
+                <form method="get" class="search-form">
+                    {{ form.search }}
+                    {{ form.status }}
+                    {{ form.date_from }}
+                    {{ form.date_to }}
+                    <button type="submit" class="btn btn-primary btn-sm">Qidirish</button>
+                </form>
+
+                {% if page_obj %}
+                <div class="table-wrap">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Raqam</th>
+                                <th>Mijoz</th>
+                                <th>Telefon</th>
+                                <th>Summa</th>
+                                <th>Sana</th>
+                                <th>Holati</th>
+                                <th>Amal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in page_obj %}
+                            <tr>
+                                <td>#{{ order.order_number }}</td>
+                                <td>{{ order.customer_name }}</td>
+                                <td>{{ order.customer_phone }}</td>
+                                <td>{{ order.get_total_amount|floatformat:0 }} so'm</td>
+                                <td>{{ order.created_date|date:"d.m.Y H:i" }}</td>
+                                <td>
+                                    <span class="status-badge" style="color: {{ order.get_status_display_color }};">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <select class="status-select" data-order-id="{{ order.id }}">
+                                        {% for value, label in order.STATUS_CHOICES %}
+                                        <option value="{{ value }}" {% if value == order.status %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; Oldingi</a>
+                    {% endif %}
+                    <span class="page-current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Keyingi &raquo;</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% else %}
+                <p class="no-results">Buyurtmalar topilmadi.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .management-page { max-width: 1100px; margin: 2.5rem auto; padding: 0 1rem; }
+        .page-title { color: var(--text-dark); margin-bottom: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); padding: 1.25rem; text-align: center; }
+        .stat-value { display: block; font-size: 1.8rem; font-weight: bold; color: var(--primary-gold); }
+        .stat-label { color: var(--text-light); font-size: 0.85rem; }
+        .search-form { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .search-form input, .search-form select { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
+        .btn-sm { padding: 8px 16px; font-size: 0.9rem; }
+        .table-wrap { overflow-x: auto; background: var(--white); border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); }
+        .orders-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        .orders-table th, .orders-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--light-beige); font-size: 0.9rem; }
+        .orders-table th { background: var(--light-beige); color: var(--text-dark); }
+        .status-badge { font-weight: 600; }
+        .status-select { padding: 5px 8px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; }
+        .page-link { padding: 8px 14px; background: var(--white); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-dark); box-shadow: 0 2px 6px var(--shadow); }
+        .page-current { color: var(--text-light); }
+        .no-results { text-align: center; color: var(--text-light); padding: 3rem; }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        document.querySelectorAll('.status-select').forEach(function (sel) {
+            sel.addEventListener('change', function () {
+                const orderId = this.dataset.orderId;
+                const status = this.value;
+                const formData = new FormData();
+                formData.append('status', status);
+                fetch(`/orders/update-status/${orderId}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Xatolik yuz berdi');
+                    }
+                })
+                .catch(() => alert('Server bilan bog\'lanishda xatolik'));
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtma #{{ order.order_number }} - Navoi Curtain</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main class="main">
+        <div class="container">
+            <div class="order-detail-page">
+                <div class="detail-top">
+                    <a href="{% url 'orders:my_orders' %}" class="back-link">&laquo; Buyurtmalarimga qaytish</a>
+                    <span class="order-status" style="color: {{ order.get_status_display_color }};">
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+
+                <h1 class="page-title">Buyurtma #{{ order.order_number }}</h1>
+
+                <div class="detail-grid">
+                    <div class="detail-box">
+                        <h3>Mijoz Ma'lumotlari</h3>
+                        <div class="info-row"><span class="label">Ism:</span><span class="value">{{ order.customer_name }}</span></div>
+                        <div class="info-row"><span class="label">Telefon:</span><span class="value">{{ order.customer_phone }}</span></div>
+                        <div class="info-row"><span class="label">Manzil:</span><span class="value">{{ order.customer_address }}</span></div>
+                        <div class="info-row"><span class="label">Sana:</span><span class="value">{{ order.created_date|date:"d.m.Y H:i" }}</span></div>
+                        {% if order.notes %}
+                        <div class="info-row"><span class="label">Izoh:</span><span class="value">{{ order.notes }}</span></div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-box">
+                        <h3>Buyurtma Elementlari</h3>
+                        {% for item in order.items.all %}
+                        <div class="order-item">
+                            {% with main_image=item.curtain.images.first %}
+                            <div class="item-image">
+                                {% if main_image %}
+                                    <img src="{{ main_image.image.url }}" alt="{{ item.curtain.title }}">
+                                {% else %}
+                                    <div class="item-placeholder">🏺</div>
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+                            <div class="item-details">
+                                <h4>{{ item.curtain.title }}</h4>
+                                <p>Miqdori: {{ item.quantity }} ta &times; {{ item.unit_price|floatformat:0 }} so'm</p>
+                                {% if item.custom_width or item.custom_height %}
+                                <p>Maxsus o'lcham: {{ item.custom_width|default:"?" }} x {{ item.custom_height|default:"?" }} sm</p>
+                                {% endif %}
+                            </div>
+                            <div class="item-price">{{ item.get_total_price|floatformat:0 }} so'm</div>
+                        </div>
+                        {% endfor %}
+                        <div class="order-total">
+                            <strong>Jami: {{ order.get_total_amount|floatformat:0 }} so'm</strong>
+                        </div>
+                    </div>
+                </div>
+
+                {% if order.status == 'pending' or order.status == 'confirmed' %}
+                <div class="detail-actions">
+                    <form method="post" action="{% url 'orders:cancel_order' order.order_number %}" onsubmit="return confirm('Buyurtmani bekor qilishni tasdiqlaysizmi?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Buyurtmani bekor qilish</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <style>
+        .order-detail-page { max-width: 900px; margin: 2.5rem auto; padding: 0 1rem; }
+        .detail-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .back-link { color: var(--text-light); text-decoration: none; }
+        .back-link:hover { color: var(--text-dark); }
+        .order-status { font-weight: 600; }
+        .page-title { color: var(--text-dark); margin-bottom: 2rem; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .detail-box { background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); }
+        .detail-box h3 { color: var(--text-dark); margin-bottom: 1rem; }
+        .info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--light-beige); }
+        .info-row:last-child { border-bottom: none; }
+        .label { font-weight: 500; color: var(--text-light); white-space: nowrap; }
+        .value { color: var(--text-dark); text-align: right; }
+        .order-item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--light-beige); }
+        .item-image img, .item-placeholder { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; }
+        .item-placeholder { background: var(--light-beige); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .item-details { flex: 1; }
+        .item-details h4 { margin: 0 0 0.25rem 0; color: var(--text-dark); font-size: 0.95rem; }
+        .item-details p { margin: 0.15rem 0; color: var(--text-light); font-size: 0.85rem; }
+        .item-price { font-weight: bold; color: var(--text-dark); white-space: nowrap; }
+        .order-total { text-align: right; padding-top: 1rem; border-top: 2px solid var(--primary-gold); margin-top: 1rem; color: var(--text-dark); }
+        .detail-actions { margin-top: 2rem; text-align: right; }
+        .detail-actions form { margin: 0; }
+        .btn-danger { background: #e74c3c; color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; padding: 10px 20px; }
+        .btn-danger:hover { background: #c0392b; }
+        @media (max-width: 768px) {
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
